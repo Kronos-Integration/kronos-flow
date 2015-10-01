@@ -1,0 +1,10 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"description": "Describes the flow definition. It may contains one or more flows",
+	"type": "object",
+	"patternProperties": {
+		"^.*$": {
+			"$ref": "flow_single_schema#"
+		}
+	}
+}
