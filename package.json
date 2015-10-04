@@ -25,6 +25,7 @@
   "devDependencies": {
     "chai": "3.2.0",
     "istanbul-harmony": "0.3.16",
+    "kronos-step-passthrough": "^1.0.1",
     "mocha": "^2.3.0",
     "semantic-release": "^6.0.1"
   },
@@ -35,6 +36,6 @@
   "license": "BSD-2-Clause",
   "dependencies": {
     "clone-deep": "^0.2.2",
-    "kronos-step": "^1.2.0"
+    "kronos-step": "^1.2.1"
   }
 }

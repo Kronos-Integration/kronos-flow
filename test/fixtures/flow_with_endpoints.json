@@ -1,0 +1,39 @@
+{
+	"my example flow": {
+		"description": "a simple flow for testing",
+		"endpoints": {
+			"inFile": {
+				"passive": true,
+				"in": true
+			},
+			"outFile": {
+				"active": true,
+				"out": true
+			}
+		},
+		"steps": {
+			"Gumbo_in": {
+				"type": "Step_1",
+				"endpoints": {
+					"inDummy": "flow:inFile",
+					"outDummy": "step:Gumbo_process/inDummy"
+				}
+			},
+			"Gumbo_process": {
+				"type": "Step_1",
+				"endpoints": {
+					"outDummy": "step:Gumbo_out/inDummy"
+				}
+			},
+			"Gumbo_out": {
+				"type": "Step_1",
+				"endpoints": {
+					"outDummy": "flow:outFile"
+				}
+			}
+		},
+		"inbound_steps": [
+			"Gumbo_in"
+		]
+	}
+}
