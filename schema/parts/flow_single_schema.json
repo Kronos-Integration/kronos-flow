@@ -2,7 +2,7 @@
 	"$schema": "http://json-schema.org/draft-04/schema#",
 	"description": "defines a flow. A flow is just a group of steps",
 	"type": "object",
-	"required": ["description", "steps"],
+	"required": ["description", "steps", "inbound_steps"],
 	"additionalProperties": false,
 	"properties": {
 		"description": {

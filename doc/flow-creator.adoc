@@ -1,0 +1,2 @@
+=== Flow creator
+This modules create flows from flow definition JSON files. A flow definition contains 1..n flows.
