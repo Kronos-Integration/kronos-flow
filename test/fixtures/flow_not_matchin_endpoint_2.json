@@ -15,19 +15,7 @@
 			"Gumbo_in": {
 				"type": "Step_1",
 				"endpoints": {
-					"inDummy": "flow:inFile",
-					"outDummy": "step:Gumbo_process/inDummy"
-				}
-			},
-			"Gumbo_process": {
-				"type": "Step_1",
-				"endpoints": {
-					"outDummy": "step:Gumbo_out/inDummy"
-				}
-			},
-			"Gumbo_out": {
-				"type": "Step_1",
-				"endpoints": {
+					"inDummy": "flow:inNotThere",
 					"outDummy": "flow:outFile"
 				}
 			}

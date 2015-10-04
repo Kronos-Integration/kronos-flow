@@ -47,6 +47,37 @@ describe('flow-creator: Extended functionality', function () {
 		testObject(kronos, 'flow_with_endpoints.json', defaultMessage, done);
 	});
 
+	it('Flow used as step', function (done) {
+
+		// Create the flow which will be used as a step in the next flow
+		let flowDefintionStep = require(path.join(fixturesDir, 'flow_with_endpoints.json'));
+		let flow = flowCreatorFactory(kronos, flowDefintionStep)[0];
+
+		testObject(kronos, 'flow_using_flow_as_step.json', defaultMessage, done);
+	});
+
+	it('ERROR: Connect Step to Flow Endpoint. FlowOut does not exists', function (done) {
+		let flowDefintion = require(path.join(fixturesDir, 'flow_not_matchin_endpoint_1.json'));
+
+		expect(function () {
+			flowCreatorFactory(kronos, flowDefintion);
+		}).to.throw(
+			"The step 'Gumbo_in' in the flow 'myExampleFlow' has an invalid enpoint connection type: 'flow:outNotThere'. The flow endpoint 'outNotThere' does not exists"
+		);
+		done();
+	});
+
+	it('ERROR: Connect Step to Flow Endpoint. FlowIn does not exists', function (done) {
+		let flowDefintion = require(path.join(fixturesDir, 'flow_not_matchin_endpoint_2.json'));
+
+		expect(function () {
+			flowCreatorFactory(kronos, flowDefintion);
+		}).to.throw(
+			"The step 'Gumbo_in' in the flow 'myExampleFlow' has an invalid enpoint connection type: 'flow:inNotThere'. The flow endpoint 'inNotThere' does not exists"
+		);
+		done();
+	});
+
 
 });
 
@@ -256,7 +287,6 @@ function testObject(kronos, flowDefinitionJsonFile, sourceMessage, done) {
 
 	// Create the flow objects and get the first one
 	let flow = flowCreatorFactory(kronos, flowDefintion)[0];
-
 
 	// get the Endpoints
 	let inEndPoint = flow.getEndpoint('inFile');

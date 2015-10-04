@@ -1,5 +1,5 @@
 {
-	"myExampleFlow": {
+	"master flow": {
 		"description": "a simple flow for testing",
 		"endpoints": {
 			"inFile": {
@@ -16,13 +16,13 @@
 				"type": "Step_1",
 				"endpoints": {
 					"inDummy": "flow:inFile",
-					"outDummy": "step:Gumbo_process/inDummy"
+					"outDummy": "step:Gumbo_process/inFile"
 				}
 			},
 			"Gumbo_process": {
-				"type": "Step_1",
+				"type": "myExampleFlow",
 				"endpoints": {
-					"outDummy": "step:Gumbo_out/inDummy"
+					"outFile": "step:Gumbo_out/inDummy"
 				}
 			},
 			"Gumbo_out": {

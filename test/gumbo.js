@@ -36,7 +36,12 @@ defaultMessage = messageFactory({
 	"my": "name"
 });
 
-testObject(kronos, 'flow_with_endpoints.json', defaultMessage);
+// Create the flow which will be used as a step in the next flow
+let flowDefintionStep = require(path.join(fixturesDir, 'flow_with_endpoints.json'));
+let flow = flowCreatorFactory(kronos, flowDefintionStep)[0];
+
+
+testObject(kronos, 'flow_using_flow_as_step.json', defaultMessage);
 
 
 
