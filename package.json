@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Kronos-Integration/kronos-flow#readme",
   "engines": {
-    "iojs": "2.0.0"
+    "node": "4.0.0"
   },
   "release": {
     "debug": false
