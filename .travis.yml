@@ -8,6 +8,7 @@ cache:
 notifications:
   email:
     - torstenlink@gmx.de
+    - markus.felten@gmx.de
 before_install:
   - npm i -g npm@^2.0.0
 before_script:
