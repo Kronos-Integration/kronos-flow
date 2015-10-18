@@ -4,7 +4,8 @@
 		"endpoints": {
 			"inFile": {
 				"passive": true,
-				"in": true
+				"in": true,
+				"target": "Gumbo_in"
 			},
 			"outFile": {
 				"active": true,
@@ -14,26 +15,23 @@
 		"steps": {
 			"Gumbo_in": {
 				"type": "Step_1",
+				"inbound": true,
 				"endpoints": {
-					"inDummy": "flow:inFile",
-					"outDummy": "step:Gumbo_process/inDummy"
+					"outDummy": "Gumbo_process/inDummy"
 				}
 			},
 			"Gumbo_process": {
 				"type": "Step_1",
 				"endpoints": {
-					"outDummy": "step:Gumbo_out/inDummy"
+					"outDummy": "Gumbo_out/inDummy"
 				}
 			},
 			"Gumbo_out": {
 				"type": "Step_1",
 				"endpoints": {
-					"outDummy": "flow:outFile"
+					"outDummy": "myExampleFlow:outFile"
 				}
 			}
-		},
-		"inbound_steps": [
-			"Gumbo_in"
-		]
+		}
 	}
 }
