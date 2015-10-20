@@ -1,6 +1,7 @@
 {
   "name": "kronos-flow",
-  "description": "Base step implementation",
+  "version": "0.0.0",
+  "description": "Base flow implementation",
   "main": "index.js",
   "scripts": {
     "cover": "node --harmony ./node_modules/istanbul-harmony/lib/cli.js cover --hook-run-in-context ./node_modules/mocha/bin/_mocha -- --R spec --U exports test",
@@ -38,7 +39,6 @@
   }],
   "license": "BSD-2-Clause",
   "dependencies": {
-    "clone-deep": "^0.2.2",
-    "kronos-step": "^1.2.1"
+    "kronos-step": "git+https://github.com/Kronos-Integration/kronos-step.git#base_api_refinement"
   }
 }

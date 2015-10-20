@@ -7,8 +7,8 @@ const assert = chai.assert;
 const expect = chai.expect;
 const should = chai.should();
 
-const flowFactory = require('../lib/flow');
-const STATUS = require('../lib/const-flow-status.js');
+const Flow = require('../lib/flow');
+const step = require('kronos-step');
 
 
 let testFlow;
@@ -19,55 +19,62 @@ let testFlow;
  * @param stepName The name of this step
  * @param time The time in millisecond it will last until the promise is fullfilled
  */
-class DummyStep {
-	constructor(stepName, time) {
-		this.name = stepName;
-		this.time = time;
-	}
+const DummyStep = {
+	"name": "dummy",
+	"extends": step.Step,
 
-	start() {
+	_initialize(manager, scopeReporter, name, stepConfiguration, endpoints, props) {
+		this.time = stepConfiguration.time;
+		return this;
+	},
+
+	_start() {
 		let self = this;
-		self.status = STATUS.starting;
 		return new Promise(function (fulfill, reject) {
 			setTimeout(function () {
-				self.status = STATUS.running;
 				fulfill(`Started the step '${self.name}'`);
 			}, self.time);
 		});
-	}
+	},
 
-	stop() {
+	_stop() {
 		let self = this;
-		self.status = STATUS.stopping;
 		return new Promise(function (fulfill, reject) {
 			setTimeout(function () {
-				self.status = STATUS.stopped;
 				fulfill(`Stopped the step '${self.name}'`);
 			}, self.time);
 		});
 	}
-}
+};
 
 
 describe('flow: Start and stop', function () {
 
 	beforeEach(function () {
-		testFlow = flowFactory({}, {
-			"name": "myFlowname"
-		});
-		testFlow.status = STATUS.stopped;
+		const testFlow = step.createStep(manager, sr, {
+			"name": "myFlowname",
+			type: "kronos-flow",
+			steps: {
+				"slowInbound": {
+					"type": "dummy",
+					"time": 50
+				},
+				"normal": {
+					"type": "dummy",
+					"time": 10
+				},
+				"slowOutbound": {
+					"type": "dummy",
+					"time": 70
+				}
+			}
+		}, "myname");
 
-		testFlow.steps = {};
-		testFlow.inboundSteps = [];
-
-		let step1 = new DummyStep('slowInbound', 50);
 		testFlow.steps.slowInbound = step1;
 		testFlow.inboundSteps.push(step1);
 
-		let step2 = new DummyStep('normal', 10);
 		testFlow.steps.normal = step2;
 
-		let step3 = new DummyStep('slowOutbound', 70);
 		testFlow.steps.slowOutbound = step3;
 	});
 
@@ -112,18 +119,4 @@ describe('flow: Start and stop', function () {
 			done();
 		});
 	});
-
-
 });
-
-
-/**
- * Creates a dummy step for flow testing. The step will execute the stop
- * and start command after the given amaount of time
- *
- * @param stepName The name of this step
- * @param time The time in millisecond it will last until the promise is fullfilled
- */
-function stepCreator(stepName, time) {
-	return new DummyStep(stepName, time);
-}
