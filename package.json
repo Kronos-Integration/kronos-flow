@@ -24,7 +24,7 @@
     "debug": false
   },
   "devDependencies": {
-    "chai": "3.2.0",
+    "chai": "3.4.0",
     "istanbul-harmony": "0.3.16",
     "kronos-step-passthrough": "^1.0.1",
     "mocha": "^2.3.0",
