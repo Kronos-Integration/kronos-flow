@@ -14,7 +14,6 @@ const path = require("path");
 const fixturesDir = path.join(__dirname, 'fixtures');
 
 
-const flowCreatorFactory = require('../lib/flow-creator');
 const Endpoint = require('kronos-step').endpoint;
 const dumyStepFactory = require('kronos-step-passthrough');
 const messageFactory = require('kronos-step').message;

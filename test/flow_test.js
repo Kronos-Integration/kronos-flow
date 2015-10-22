@@ -21,28 +21,24 @@ let testFlow;
  */
 const DummyStep = {
 	"name": "dummy",
-	"extends": step.Step,
 
 	_initialize(manager, scopeReporter, name, stepConfiguration, endpoints, props) {
 		this.time = stepConfiguration.time;
-		return this;
 	},
 
 	_start() {
 		let self = this;
 		return new Promise(function (fulfill, reject) {
-			setTimeout(function () {
-				fulfill(`Started the step '${self.name}'`);
-			}, self.time);
+			setTimeout(() =>
+				fulfill(`Started the step '${self.name}'`), self.time);
 		});
 	},
 
 	_stop() {
 		let self = this;
 		return new Promise(function (fulfill, reject) {
-			setTimeout(function () {
-				fulfill(`Stopped the step '${self.name}'`);
-			}, self.time);
+			setTimeout(() =>
+				fulfill(`Stopped the step '${self.name}'`), self.time);
 		});
 	}
 };

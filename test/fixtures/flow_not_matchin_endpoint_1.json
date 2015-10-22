@@ -1,27 +1,27 @@
 {
-	"myExampleFlow": {
-		"description": "a simple flow for testing",
-		"endpoints": {
-			"inFile": {
-				"passive": true,
-				"in": true
-			},
-			"outFile": {
-				"active": true,
-				"out": true
-			}
+	"name": "myExampleFlow",
+	"type": "kronos-flow",
+	"description": "a simple flow for testing",
+	"endpoints": {
+		"inFile": {
+			"passive": true,
+			"in": true
 		},
-		"steps": {
-			"Gumbo_in": {
-				"type": "Step_1",
-				"endpoints": {
-					"inDummy": "flow:inFile",
-					"outDummy": "flow:outNotThere"
-				}
+		"outFile": {
+			"active": true,
+			"out": true
+		}
+	},
+	"steps": {
+		"Gumbo_in": {
+			"type": "Step_1",
+			"endpoints": {
+				"inDummy": "flow:inFile",
+				"outDummy": "flow:outNotThere"
 			}
-		},
-		"inbound_steps": [
-			"Gumbo_in"
-		]
-	}
+		}
+	},
+	"inbound_steps": [
+		"Gumbo_in"
+	]
 }

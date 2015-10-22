@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/Kronos-Integration/kronos-flow#readme",
   "engines": {
-    "node": "4.0.0"
+    "node": ">=4.2.1"
   },
   "release": {
     "debug": false
@@ -28,7 +28,8 @@
     "istanbul-harmony": "0.3.16",
     "kronos-step-passthrough": "^1.0.1",
     "mocha": "^2.3.0",
-    "semantic-release": "^6.0.1"
+    "semantic-release": "^6.0.1",
+    "kronos-test-step": "https://github.com/Kronos-Integration/kronos-test-step.git"
   },
   "contributors": [{
     "name": "Torsten Link",
