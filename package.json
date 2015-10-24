@@ -29,7 +29,8 @@
     "kronos-step-passthrough": "^1.0.1",
     "mocha": "^2.3.0",
     "semantic-release": "^6.0.1",
-    "kronos-test-step": "https://github.com/Kronos-Integration/kronos-test-step.git"
+    "kronos-test-step": "https://github.com/Kronos-Integration/kronos-test-step.git",
+    "scope-reporter": "2.1.0"
   },
   "contributors": [{
     "name": "Torsten Link",
