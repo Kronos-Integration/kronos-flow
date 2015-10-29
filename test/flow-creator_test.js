@@ -7,6 +7,7 @@ const assert = chai.assert;
 const expect = chai.expect;
 const should = chai.should();
 
+const events = require('events');
 
 const fs = require('fs');
 const path = require("path");
@@ -14,31 +15,68 @@ const path = require("path");
 const fixturesDir = path.join(__dirname, 'fixtures');
 
 
-const Endpoint = require('kronos-step').endpoint;
-const dumyStepFactory = require('kronos-step-passthrough');
-const messageFactory = require('kronos-step').message;
+const step = require('kronos-step');
+const scopeDefinitions = step.ScopeDefinitions;
+const scopeReporter = require('scope-reporter');
+const stepPassThrough = require('kronos-step-passthrough');
+const messageFactory = require('kronos-message');
+const flow = require('../index.js');
 
 
-let kronos;
+// ---------------------------
+// Create a mock manager
+// ---------------------------
+const sr = scopeReporter.createReporter(scopeDefinitions);
+var stepImplementations = {};
+const manager = Object.create(new events.EventEmitter(), {
+	steps: {
+		value: stepImplementations
+	},
+	scopeReporter: {
+		value: sr
+	}
+});
+manager.registerStepImplementation = function (si) {
+	stepImplementations[si.name] = si;
+};
+
+manager.registerFlow = function (flow) {
+	if (!this.flows) {
+		this.flows = {};
+	}
+	this.flows[flow.name] = flow;
+};
+
+manager.getStepInstance = function (configuration) {
+	const stepImpl = stepImplementations[configuration.type];
+	if (stepImpl) {
+		return stepImpl.getInstance(this, this.scopeReporter, configuration);
+	}
+};
+
+// register the flow
+flow.registerWithManager(manager);
+
+// register the passthroughStep
+stepPassThrough.registerWithManager(manager);
+
+// create 5 copies and register them also
+for (let i = 1; i < 6; i++) {
+	const step = manager.getStepInstance({
+		"type": "kronos-step-passthrough",
+		"name": "Step_" + i
+	});
+	manager.registerStepImplementation(step);
+}
+
 let defaultMessage;
 
 describe('flow-creator: Extended functionality', function () {
 
 	beforeEach(function () {
-		// Prepare the the dummy steps needed by the flow
-
-		kronos = {};
-		kronos.steps = {};
-		kronos.steps.Step_1 = dumyStepFactory;
-		kronos.steps.Step_2 = dumyStepFactory;
-		kronos.steps.Step_3 = dumyStepFactory;
-		kronos.steps.Step_4 = dumyStepFactory;
-		kronos.steps.Step_5 = dumyStepFactory;
-
 		defaultMessage = messageFactory({
 			"my": "name"
 		});
-
 	});
 
 
@@ -286,6 +324,12 @@ function testObject(kronos, flowDefinitionJsonFile, sourceMessage, done) {
 
 	// Create the flow objects and get the first one
 	let flow = flowCreatorFactory(kronos, flowDefintion)[0];
+
+	const step = manager.getStepInstance({
+		"type": "kronos-flow",
+		"name": "myFlow",
+		"steps": flowDefintion
+	});
 
 	// get the Endpoints
 	let inEndPoint = flow.getEndpoint('inFile');
