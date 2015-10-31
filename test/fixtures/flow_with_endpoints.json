@@ -14,22 +14,22 @@
 		},
 		"steps": {
 			"Gumbo_in": {
-				"type": "Step_1",
+				"type": "kronos-step-passthrough",
 				"inbound": true,
 				"endpoints": {
-					"outDummy": "Gumbo_process/inDummy"
+					"out": "Gumbo_process/in"
 				}
 			},
 			"Gumbo_process": {
-				"type": "Step_1",
+				"type": "kronos-step-passthrough",
 				"endpoints": {
-					"outDummy": "Gumbo_out/inDummy"
+					"out": "Gumbo_out/in"
 				}
 			},
 			"Gumbo_out": {
-				"type": "Step_1",
+				"type": "kronos-step-passthrough",
 				"endpoints": {
-					"outDummy": "myExampleFlow:outFile"
+					"out": "myExampleFlow:outFile"
 				}
 			}
 		}

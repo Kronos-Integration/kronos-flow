@@ -5,6 +5,7 @@ const Flow = require('./lib/flow');
 const Step = require('kronos-step');
 
 module.exports.Flow = Flow;
+module.exports.loadFlows = Flow.loadFlows;
 
 
 exports.registerWithManager = function (manager) {
