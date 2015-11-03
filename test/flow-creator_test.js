@@ -71,7 +71,7 @@ for (let i = 1; i < 6; i++) {
 
 let defaultMessage;
 
-let flowDefintion = require(path.join(fixturesDir, "flow_with_endpoints.json"));
+let flowDefintion = require(path.join(fixturesDir, "flow_nested_complex.json"));
 flow.loadFlows(manager, sr, flowDefintion);
 
 // describe('flow-creator: Extended functionality', function () {
