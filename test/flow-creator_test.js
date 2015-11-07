@@ -50,7 +50,7 @@ manager.registerFlow = function (flow) {
 manager.getStepInstance = function (configuration) {
 	const stepImpl = stepImplementations[configuration.type];
 	if (stepImpl) {
-		return stepImpl.getInstance(this, this.scopeReporter, configuration);
+		return stepImpl.createInstance(this, this.scopeReporter, configuration);
 	}
 };
 

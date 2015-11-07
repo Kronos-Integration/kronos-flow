@@ -4,10 +4,10 @@
 const Flow = require('./lib/flow');
 const Step = require('kronos-step');
 
-module.exports.Flow = Flow;
+module.exports.FlowFactory = Flow.FlowFactory;
 module.exports.loadFlows = Flow.loadFlows;
 
 
 exports.registerWithManager = function (manager) {
-  manager.registerStepImplementation(Step.prepareStepForRegistration(manager, undefined, Flow));
+  manager.registerStepImplementation(Flow.FlowFactory);
 };
