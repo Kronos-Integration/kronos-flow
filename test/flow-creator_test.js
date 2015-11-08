@@ -26,33 +26,7 @@ const flow = require('../index.js');
 // ---------------------------
 // Create a mock manager
 // ---------------------------
-const sr = scopeReporter.createReporter(scopeDefinitions);
-var stepImplementations = {};
-const manager = Object.create(new events.EventEmitter(), {
-	steps: {
-		value: stepImplementations
-	},
-	scopeReporter: {
-		value: sr
-	}
-});
-manager.registerStepImplementation = function (si) {
-	stepImplementations[si.name] = si;
-};
-
-manager.registerFlow = function (flow) {
-	if (!this.flows) {
-		this.flows = {};
-	}
-	this.flows[flow.name] = flow;
-};
-
-manager.getStepInstance = function (configuration) {
-	const stepImpl = stepImplementations[configuration.type];
-	if (stepImpl) {
-		return stepImpl.createInstance(this, this.scopeReporter, configuration);
-	}
-};
+const manager = step.managerMock;
 
 // register the flow
 flow.registerWithManager(manager);
@@ -72,7 +46,17 @@ for (let i = 1; i < 6; i++) {
 let defaultMessage;
 
 let flowDefintion = require(path.join(fixturesDir, "flow_nested_complex.json"));
-flow.loadFlows(manager, sr, flowDefintion);
+flow.loadFlows(manager, manager.scopeReporter, flowDefintion);
+
+const myMasterFlow = manager.getFlow("masterFlow");
+console.log(myMasterFlow.toJSON());
+
+describe('flow-creator: static tests', function () {
+	it('to json', function (done) {
+		flow.toJSON();
+	});
+
+});
 
 // describe('flow-creator: Extended functionality', function () {
 //
