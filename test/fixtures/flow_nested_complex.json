@@ -1,5 +1,5 @@
 {
-	"masterFlow": {
+	"nestedComplex": {
 		"description": "a simple flow for testing",
 		"endpoints": {
 			"inFile": "Gumbo_in/in",

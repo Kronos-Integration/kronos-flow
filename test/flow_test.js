@@ -8,28 +8,31 @@ const chai = require('chai'),
 	should = chai.should(),
 	scopeReporter = require('scope-reporter'),
 	events = require('events'),
+	stepPassThrough = require('kronos-step-passthrough'),
 	testStep = require('kronos-test-step'),
-	Flow = require('../lib/flow'),
+	flow = require('../lib/flow'),
 	step = require('kronos-step');
 
 
-const sr = scopeReporter.createReporter(step.ScopeDefinitions, function (reporter) {});
+// ---------------------------
+// Create a mock manager
+// ---------------------------
+const manager = testStep.managerMock;
 
-var stepImplementations = {};
-const manager = Object.create(new events.EventEmitter(), {
-	steps: {
-		value: stepImplementations
-	}
-});
+// register the flow
+flow.registerWithManager(manager);
 
-manager.registerStepImplementation = function (si) {
-	const psi = step.prepareStepForRegistration(manager, sr, si);
-	stepImplementations[psi.name] = psi;
-};
+// register the passthroughStep
+stepPassThrough.registerWithManager(manager);
 
-manager.registerStepImplementation(Flow);
-
-let testFlow;
+// create 5 copies and register them also
+for (let i = 1; i < 6; i++) {
+	const step = manager.getStepInstance({
+		"type": "kronos-step-passthrough",
+		"name": "Step_" + i
+	});
+	manager.registerStepImplementation(step);
+}
 
 /**
  * A dummy step for flow testing. The step will execute the stop
@@ -71,25 +74,32 @@ const DummyStep = {
 
 manager.registerStepImplementation(DummyStep);
 
+
 describe('livecycle', function () {
-	const testFlow = step.createStep(manager, sr, {
-		"name": "myFlowName",
-		"type": "kronos-flow",
-		"steps": {
-			"slowInbound": {
-				"type": "dummy",
-				"time": 50
-			},
-			"normal": {
-				"type": "dummy",
-				"time": 10
-			},
-			"slowOutbound": {
-				"type": "dummy",
-				"time": 70
+
+	// load the content of the flow definition
+	flow.loadFlows(manager, manager.scopeReporter, {
+		"myFlowName": {
+			"type": "kronos-flow",
+			"steps": {
+				"slowInbound": {
+					"type": "dummy",
+					"time": 50
+				},
+				"normal": {
+					"type": "dummy",
+					"time": 10
+				},
+				"slowOutbound": {
+					"type": "dummy",
+					"time": 70
+				}
 			}
 		}
 	});
+
+	const testFlow = manager.getFlow("myFlowName");
+
 
 	testStep.checkStepLivecycle(manager, testFlow, function (step, state) {});
 });
