@@ -66,7 +66,10 @@
 
 
 					"SubStepOut": {
-						"type": "kronos-step-passthrough"
+						"type": "kronos-step-passthrough",
+						"endpoints": {
+							"in": "deepFlow_1/outDeep"
+						}
 					}
 				}
 			},
@@ -74,7 +77,10 @@
 
 
 			"Gumbo_out": {
-				"type": "kronos-step-passthrough"
+				"type": "kronos-step-passthrough",
+				"endpoints": {
+					"in": "subFlow_1/outFlow"
+				}
 			}
 		}
 	}

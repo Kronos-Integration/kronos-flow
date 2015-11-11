@@ -3,7 +3,7 @@
 		"description": "a simple flow for testing",
 		"endpoints": {
 			"inFile": "Gumbo_in/in",
-			"outFile": "Gumbo_in/out"
+			"outFile": "Gumbo_out/out"
 		},
 		"steps": {
 			"Gumbo_in": {
