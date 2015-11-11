@@ -1,4 +1,4 @@
-/* global describe, it, beforeEach */
+/* global describe, it, xit, beforeEach */
 /* jslint node: true, esnext: true */
 "use strict";
 
@@ -38,7 +38,7 @@ stepPassThrough.registerWithManager(manager);
 
 
 describe('flow-creator toJSON', function () {
-	it('flowOneStep', function (done) {
+	xit('flowOneStep', function (done) {
 		// load the json file
 		const flowDefintionString = fs.readFileSync(path.join(fixturesDir, "flow_one_step.json"), "utf-8");
 		const flowDefintionReference = JSON.parse(flowDefintionString);
@@ -55,7 +55,7 @@ describe('flow-creator toJSON', function () {
 	});
 
 
-	it('nestedComplex', function (done) {
+	xit('nestedComplex', function (done) {
 		// load the json file
 		const flowDefintionString = fs.readFileSync(path.join(fixturesDir, "flow_nested_complex.json"), "utf-8");
 		const flowDefintionReference = JSON.parse(flowDefintionString);
