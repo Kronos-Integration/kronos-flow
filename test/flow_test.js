@@ -2,128 +2,104 @@
 /* jslint node: true, esnext: true */
 "use strict";
 
-const chai = require('chai');
-const assert = chai.assert;
-const expect = chai.expect;
-const should = chai.should();
-
-const flowFactory = require('../lib/flow');
-const STATUS = require('../lib/const-flow-status.js');
-
-
-let testFlow;
-
-/**
- * A dummy step for flow testing. The step will execute the stop
- * and start command after the given amaount of time
- * @param stepName The name of this step
- * @param time The time in millisecond it will last until the promise is fullfilled
- */
-class DummyStep {
-	constructor(stepName, time) {
-		this.name = stepName;
-		this.time = time;
-	}
-
-	start() {
-		let self = this;
-		self.status = STATUS.starting;
-		return new Promise(function (fulfill, reject) {
-			setTimeout(function () {
-				self.status = STATUS.running;
-				fulfill(`Started the step '${self.name}'`);
-			}, self.time);
-		});
-	}
-
-	stop() {
-		let self = this;
-		self.status = STATUS.stopping;
-		return new Promise(function (fulfill, reject) {
-			setTimeout(function () {
-				self.status = STATUS.stopped;
-				fulfill(`Stopped the step '${self.name}'`);
-			}, self.time);
-		});
-	}
-}
+const chai = require('chai'),
+	assert = chai.assert,
+	expect = chai.expect,
+	should = chai.should(),
+	scopeReporter = require('scope-reporter'),
+	events = require('events'),
+	stepPassThrough = require('kronos-step-passthrough'),
+	testStep = require('kronos-test-step'),
+	flow = require('../lib/flow'),
+	step = require('kronos-step');
 
 
-describe('flow: Start and stop', function () {
-
-	beforeEach(function () {
-		testFlow = flowFactory({}, {
-			"name": "myFlowname"
-		});
-		testFlow.status = STATUS.stopped;
-
-		testFlow.steps = {};
-		testFlow.inboundSteps = [];
-
-		let step1 = new DummyStep('slowInbound', 50);
-		testFlow.steps.slowInbound = step1;
-		testFlow.inboundSteps.push(step1);
-
-		let step2 = new DummyStep('normal', 10);
-		testFlow.steps.normal = step2;
-
-		let step3 = new DummyStep('slowOutbound', 70);
-		testFlow.steps.slowOutbound = step3;
-	});
-
-
-	it('Flow in status stopped to be started', function (done) {
-		testFlow.start().then(function (msg) {
-			assert.equal(testFlow.status.name, STATUS.running.name);
-			assert.equal(msg.name, STATUS.running.name);
-			done();
-		});
-	});
-
-	it('Flow in status running to be stopped', function (done) {
-		testFlow.status = STATUS.running;
-
-		testFlow.stop().then(function (msg) {
-			assert.equal(testFlow.status.name, STATUS.stopped.name);
-			assert.equal(msg.name, STATUS.stopped.name);
-			done();
-		});
-	});
-
-
-	it("Try to start a flow not in status 'stopped'", function (done) {
-		testFlow.status = STATUS.running;
-
-		testFlow.start().then(function (msg) {
-			assert.ok(false, "The promise should reject");
-		}).catch(function (err) {
-			assert.equal(err, "The flow is not in status 'stopped', so it could not be started.");
-			done();
-		});
-	});
-
-	it("Try to stop a flow not in status 'running'", function (done) {
-		testFlow.status = STATUS.stopping;
-
-		testFlow.stop().then(function (msg) {
-			assert.ok(false, "The promise should reject");
-		}).catch(function (err) {
-			assert.equal(err, "The flow is not in status 'running', so it could not be stopped.");
-			done();
-		});
-	});
-
-
-});
-
-
-/**
- * Creates a dummy step for flow testing. The step will execute the stop
- * and start command after the given amaount of time
- *
- * @param stepName The name of this step
- * @param time The time in millisecond it will last until the promise is fullfilled
- */
-function stepCreator(stepName, time) {
-	return new DummyStep(stepName, time);
-}
+// // ---------------------------
+// // Create a mock manager
+// // ---------------------------
+// const manager = testStep.managerMock;
+//
+// // register the flow
+// flow.registerWithManager(manager);
+//
+// // register the passthroughStep
+// stepPassThrough.registerWithManager(manager);
+//
+// // create 5 copies and register them also
+// for (let i = 1; i < 6; i++) {
+// 	const step = manager.getStepInstance({
+// 		"type": "kronos-step-passthrough",
+// 		"name": "Step_" + i
+// 	});
+// 	manager.registerStepImplementation(step);
+// }
+//
+// /**
+//  * A dummy step for flow testing. The step will execute the stop
+//  * and start command after the given amaount of time
+//  * @param stepName The name of this step
+//  * @param time The time in millisecond it will last until the promise is fullfilled
+//  */
+// const DummyStep = {
+// 	"name": "dummy",
+//
+// 	_initialize(manager, scopeReporter, name, stepConfiguration, endpoints, props) {
+// 		props.time = {
+// 			value: stepConfiguration.time
+// 		};
+// 		console.log(`DummyStep: time: ${stepConfiguration.time}`);
+// 	},
+//
+// 	_start() {
+// 		let self = this;
+// 		return new Promise(function (fulfill, reject) {
+// 			setTimeout(() => {
+// 					console.log(`Started the step '${self.name}'`);
+// 					fulfill(self);
+// 				},
+// 				self.time);
+// 		});
+// 	},
+//
+// 	_stop() {
+// 		let self = this;
+// 		return new Promise(function (fulfill, reject) {
+// 			setTimeout(() => {
+// 				console.log(`Stopped the step '${self.name}'`);
+// 				fulfill(self);
+// 			}, self.time);
+// 		});
+// 	}
+// };
+//
+// manager.registerStepImplementation(DummyStep);
+//
+//
+// describe('livecycle', function () {
+//
+// 	// load the content of the flow definition
+// 	flow.loadFlows(manager, manager.scopeReporter, {
+// 		"myFlowName": {
+// 			"type": "kronos-flow",
+// 			"steps": {
+// 				"slowInbound": {
+// 					"type": "dummy",
+// 					"time": 50
+// 				},
+// 				"normal": {
+// 					"type": "dummy",
+// 					"time": 10
+// 				},
+// 				"slowOutbound": {
+// 					"type": "dummy",
+// 					"time": 70
+// 				}
+// 			}
+// 		}
+// 	});
+//
+// 	const testFlow = manager.getFlow("myFlowName");
+//
+//
+// 	testStep.checkStepLivecycle(manager, testFlow, function (step, state) {});
+// });

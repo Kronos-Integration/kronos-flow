@@ -1,6 +1,10 @@
 language: node_js
 node_js:
+<<<<<<< HEAD
 - 4.1
+=======
+  - 4.2
+>>>>>>> dd81d12d1e3f1448b03d12228ac5d8ffdbbb408f
 sudo: false
 branches:
   only:
