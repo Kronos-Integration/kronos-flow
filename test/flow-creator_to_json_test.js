@@ -17,8 +17,6 @@ const fixturesDir = path.join(__dirname, 'fixtures');
 
 
 const step = require('kronos-step');
-const scopeDefinitions = step.ScopeDefinitions;
-const scopeReporter = require('scope-reporter');
 const stepPassThrough = require('kronos-step-passthrough');
 const messageFactory = require('kronos-message');
 const flow = require('../index.js');
