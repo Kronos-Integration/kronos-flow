@@ -24,7 +24,7 @@
     "debug": false
   },
   "devDependencies": {
-    "chai": "3.4.0",
+    "chai": "3.4.1",
     "istanbul": "^0.4.0",
     "kronos-message": "^1.0.1",
     "kronos-step-passthrough": "^1.0.1",
@@ -46,6 +46,6 @@
   "license": "BSD-2-Clause",
   "dependencies": {
     "clone-deep": "^0.2.2",
-    "kronos-step": "^2.5.1"
+    "kronos-step": "^2.6.0"
   }
 }
