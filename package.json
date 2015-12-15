@@ -43,6 +43,6 @@
   "license": "BSD-2-Clause",
   "dependencies": {
     "clone-deep": "0.2.3",
-    "kronos-step": "2.8.0"
+    "kronos-step": "2.9.0"
   }
 }
