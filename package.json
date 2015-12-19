@@ -26,7 +26,7 @@
     "istanbul": "^0.4.1",
     "kronos-message": "^1.0.1",
     "kronos-step-passthrough": "^1.1.1",
-    "kronos-test-step": "2.3.0",
+    "kronos-test-step": "2.4.0",
     "mocha": "2.3.4",
     "semantic-release": "6.0.3"
   },
