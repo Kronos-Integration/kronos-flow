@@ -6,7 +6,7 @@ const chai = require('chai'),
 	assert = chai.assert,
 	expect = chai.expect,
 	should = chai.should(),
-	events = require('events'),
+	//events = require('events'),
 	stepPassThrough = require('kronos-step-passthrough'),
 	testStep = require('kronos-test-step'),
 	flow = require('../lib/flow'),
@@ -99,9 +99,35 @@ describe('flow', function () {
 
 	describe('static', function () {
 		testStep.checkStepStatic(manager, f);
+
+		it("autostart is false", function () {
+			assert.equal(f.autostart, false);
+		});
 	});
 
 	describe('livecycle', function () {
 		testStep.checkStepLivecycle(manager, f);
 	});
+
+	describe('autostart', function () {
+		flow.loadFlows(manager, manager.scopeReporter, {
+			"autostartFlow": {
+				"type": "kronos-flow",
+				"autostart": true,
+				"steps": {
+					"slowInbound": {
+						"type": "slow-start",
+						"time": 10
+					}
+				}
+			}
+		});
+		const f2 = manager.getFlow("autostartFlow");
+
+		it("is set", function () {
+			assert.equal(f2.autostart, true);
+		});
+		//testStep.checkStepStatic(manager, f2);
+	});
+
 });
