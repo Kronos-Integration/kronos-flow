@@ -73,8 +73,7 @@ manager.registerStepImplementation(Object.assign({}, step.Step, {
 	}
 }));
 
-describe('livecycle', function () {
-
+describe('flow', function () {
 	// load the content of the flow definition
 	flow.loadFlows(manager, manager.scopeReporter, {
 		"myFlowName": {
@@ -96,7 +95,13 @@ describe('livecycle', function () {
 		}
 	});
 
-	const testFlow = manager.getFlow("myFlowName");
+	const f = manager.getFlow("myFlowName");
 
-	testStep.checkStepLivecycle(manager, testFlow);
+	describe('static', function () {
+		testStep.checkStepStatic(manager, f);
+	});
+
+	describe('livecycle', function () {
+		testStep.checkStepLivecycle(manager, f);
+	});
 });
