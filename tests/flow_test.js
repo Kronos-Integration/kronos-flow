@@ -43,7 +43,7 @@ for (let i = 1; i < 6; i++) {
 manager.registerStepImplementation(Object.assign({}, step.Step, {
 	"name": "slow-start",
 
-	initialize(manager, scopeReporter, name, stepConfiguration, endpoints, props) {
+	initialize(manager, scopeReporter, name, stepConfiguration, props) {
 		props.time = {
 			value: stepConfiguration.time
 		};

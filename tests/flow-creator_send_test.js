@@ -95,33 +95,29 @@ function flowTest(flowFileName, flowName, done) {
 	// This endpoint is the IN endpoint of the next step.
 	// It will be connected with the OUT endpoint of the Adpater
 	let receiveEndpoint = step.createEndpoint("testEndpointIn", {
-		"in": true,
-		"passive": true
+		"in": true
 	});
 
 	// This endpoint is the OUT endpoint of the previous step.
 	// It will be connected with the OUT endpoint of the Adpater
 	let sendEndpoint = step.createEndpoint("testEndpointOut", {
-		"out": true,
-		"active": true
+		"out": true
 	});
 
 
 	// This generator emulates the IN endpoint of the next step.
 	// It will be connected with the OUT endpoint of the Adpater
-	let generatorFunction = function* () {
-		while (true) {
-			const message = yield;
+	let receiveFunction = function (message) {
+		// the received message should equal the sended one
+		// before comparing delete the hops
+		message.hops = [];
 
-			// the received message should equal the sended one
-			// before comparing delete the hops
-			message.hops = [];
-
-			assert.deepEqual(message, msgToSend);
-			done();
-		}
+		assert.deepEqual(message, msgToSend);
+		done();
+		return Promise.resolve("OK");
 	};
-	receiveEndpoint.setPassiveGenerator(generatorFunction);
+
+	receiveEndpoint.receive = receiveFunction;
 	outEndPoint.connect(receiveEndpoint);
 	inEndPoint.connect(sendEndpoint);
 
