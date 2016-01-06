@@ -44,6 +44,6 @@
   ],
   "license": "BSD-2-Clause",
   "dependencies": {
-    "kronos-step": "^3.3.0"
+    "kronos-step": "^3.3.1"
   }
 }
