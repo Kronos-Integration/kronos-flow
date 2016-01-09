@@ -118,8 +118,8 @@ function flowTest(flowFileName, flowName, done) {
 	};
 
 	receiveEndpoint.receive = receiveFunction;
-	outEndPoint.connect(receiveEndpoint);
-	inEndPoint.connect(sendEndpoint);
+	outEndPoint.connected = receiveEndpoint;
+	sendEndpoint.connected = inEndPoint;
 
 	myFlow.start().then(function (step) {
 		sendEndpoint.send(msgToSend);
