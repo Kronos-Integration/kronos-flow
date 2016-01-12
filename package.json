@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "chai": "3.4.1",
-    "istanbul": "^0.4.1",
+    "istanbul": "^0.4.2",
     "cz-conventional-changelog": "^1.1.5",
     "kronos-message": "^1.0.1",
     "kronos-step-passthrough": "^1.2.2",
@@ -33,13 +33,16 @@
     "mocha": "2.3.4",
     "semantic-release": "6.0.3"
   },
-  "contributors": [{
-    "name": "Torsten Link",
-    "email": "torstenlink@gmx.de"
-  }, {
-    "name": "Markus Felten",
-    "email": "markus.felten@gmx.de"
-  }],
+  "contributors": [
+    {
+      "name": "Torsten Link",
+      "email": "torstenlink@gmx.de"
+    },
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ],
   "license": "BSD-2-Clause",
   "dependencies": {
     "kronos-step": "^3.4.0"
