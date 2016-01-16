@@ -94,16 +94,11 @@ function flowTest(flowFileName, flowName, done) {
 
 	// This endpoint is the IN endpoint of the next step.
 	// It will be connected with the OUT endpoint of the Adpater
-	let receiveEndpoint = step.createEndpoint("testEndpointIn", {
-		"in": true
-	});
+	let receiveEndpoint = new step.endpoint.ReceiveEndpoint("testEndpointIn");
 
 	// This endpoint is the OUT endpoint of the previous step.
 	// It will be connected with the OUT endpoint of the Adpater
-	let sendEndpoint = step.createEndpoint("testEndpointOut", {
-		"out": true
-	});
-
+	let sendEndpoint = new step.endpoint.SendEndpoint("testEndpointOut");
 
 	// This generator emulates the IN endpoint of the next step.
 	// It will be connected with the OUT endpoint of the Adpater
@@ -121,10 +116,6 @@ function flowTest(flowFileName, flowName, done) {
 	outEndPoint.connected = receiveEndpoint;
 	sendEndpoint.connected = inEndPoint;
 
-	myFlow.start().then(function (step) {
-		sendEndpoint.send(msgToSend);
-	}, function (error) {
-		done(error); // 'uh oh: something bad happened’
-	});
-
+	myFlow.start().then(step =>
+		sendEndpoint.receive(msgToSend), done); // 'uh oh: something bad happened’
 }
