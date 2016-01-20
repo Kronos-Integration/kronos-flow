@@ -45,7 +45,7 @@
   ],
   "license": "BSD-2-Clause",
   "dependencies": {
-    "kronos-step": "^3.8.0"
+    "kronos-step": "^3.8.1"
   },
   "config": {
     "commitizen": {
