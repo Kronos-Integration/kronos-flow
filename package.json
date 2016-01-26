@@ -28,7 +28,7 @@
     "istanbul": "^0.4.2",
     "cz-conventional-changelog": "^1.1.5",
     "kronos-message": "^1.0.1",
-    "kronos-step-passthrough": "^1.2.4",
+    "kronos-step-passthrough": "^1.2.6",
     "kronos-test-step": "2.10.0",
     "mocha": "2.3.4",
     "semantic-release": "6.0.3"
