@@ -30,7 +30,7 @@
     "kronos-message": "^1.0.1",
     "kronos-step-passthrough": "^1.2.6",
     "kronos-test-step": "2.10.0",
-    "mocha": "2.4.1",
+    "mocha": "2.4.2",
     "semantic-release": "6.0.3"
   },
   "contributors": [
