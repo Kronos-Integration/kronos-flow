@@ -74,7 +74,7 @@ function flowTest(flowFileName, flowName, done) {
 	const flowDefintion = require(path.join(fixturesDir, flowFileName));
 
 	// load the content of the flow definition
-	flow.loadFlows(manager, manager.scopeReporter, flowDefintion);
+	flow.loadFlows(manager, flowDefintion);
 
 	// get the flow from the manager
 	const myFlow = manager.getFlow(flowName);

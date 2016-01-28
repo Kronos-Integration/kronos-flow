@@ -43,7 +43,7 @@ for (let i = 1; i < 6; i++) {
 manager.registerStepImplementation(Object.assign({}, step.Step, {
 	"name": "slow-start",
 
-	initialize(manager, scopeReporter, name, stepConfiguration, props) {
+	initialize(manager, name, stepConfiguration, props) {
 		props.time = {
 			value: stepConfiguration.time
 		};
@@ -75,7 +75,7 @@ manager.registerStepImplementation(Object.assign({}, step.Step, {
 
 describe('flow', function () {
 	// load the content of the flow definition
-	flow.loadFlows(manager, manager.scopeReporter, {
+	flow.loadFlows(manager, {
 		"myFlowName": {
 			"type": "kronos-flow",
 			"steps": {
@@ -110,7 +110,7 @@ describe('flow', function () {
 	});
 
 	describe('autostart', function () {
-		flow.loadFlows(manager, manager.scopeReporter, {
+		flow.loadFlows(manager, {
 			"autostartFlow": {
 				"type": "kronos-flow",
 				"autostart": true,
