@@ -24,7 +24,7 @@
     "node": ">=4.2.1"
   },
   "devDependencies": {
-    "chai": "3.4.1",
+    "chai": "3.5.0",
     "istanbul": "^0.4.2",
     "cz-conventional-changelog": "^1.1.5",
     "kronos-message": "^1.0.1",
