@@ -8,5 +8,5 @@ module.exports.loadFlows = Flow.loadFlows;
 
 
 exports.registerWithManager = function (manager) {
-  manager.registerStepImplementation(Flow.FlowFactory);
+  manager.registerStep(Flow.FlowFactory);
 };
