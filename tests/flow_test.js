@@ -8,126 +8,137 @@ const chai = require('chai'),
 	should = chai.should(),
 	//events = require('events'),
 	stepPassThrough = require('kronos-step-passthrough'),
+	serviceManager = require('kronos-service-manager'),
 	testStep = require('kronos-test-step'),
-	flow = require('../lib/flow'),
+	Flow = require('../lib/flow'),
 	step = require('kronos-step');
 
 
 // ---------------------------
 // Create a mock manager
 // ---------------------------
-const manager = testStep.managerMock;
+const managerPromise = serviceManager.manager().then(manager =>
+	Promise.all([
+		manager.registerStep(Flow.FlowFactory),
 
-// register the flow
-require('../index').registerWithManager(manager);
+		/**
+		 * A dummy step for flow testing. The step will execute the stop
+		 * and start command after the given amaount of time
+		 * @param stepName The name of this step
+		 * @param time The time in millisecond it will last until the promise is fullfilled
+		 */
+		manager.registerStep(Object.assign({}, step.Step, {
+			"name": "slow-start",
 
-/*
-// register the passthroughStep
-stepPassThrough.registerWithManager(manager);
+			initialize(manager, name, stepConfiguration, props) {
+				props.time = {
+					value: stepConfiguration.time
+				};
+				//console.log(`DummyStep: time: ${stepConfiguration.time}`);
+			},
 
-// create 5 copies and register them also
-for (let i = 1; i < 6; i++) {
-	manager.registerStepImplementation(manager.getStepInstance({
-		"type": "kronos-step-passthrough",
-		"name": "Step_" + i
-	}));
-}
-*/
+			_start() {
+				const self = this;
+				return new Promise(function (fulfill, reject) {
+					setTimeout(() => {
+							//console.log(`Started the step '${self.name}'`);
+							fulfill(self);
+						},
+						self.time);
+				});
+			},
 
-/**
- * A dummy step for flow testing. The step will execute the stop
- * and start command after the given amaount of time
- * @param stepName The name of this step
- * @param time The time in millisecond it will last until the promise is fullfilled
- */
-manager.registerStepImplementation(Object.assign({}, step.Step, {
-	"name": "slow-start",
+			// TODO why does "can be stopped while starting" not work
+			__stop() {
+				const self = this;
+				return new Promise(function (fulfill, reject) {
+					setTimeout(() => {
+						//console.log(`Stopped the step '${self.name}'`);
+						fulfill(self);
+					}, self.time);
+				});
+			}
+		})),
+	]).then(() =>
+		Promise.resolve(manager)
+	));
 
-	initialize(manager, scopeReporter, name, stepConfiguration, props) {
-		props.time = {
-			value: stepConfiguration.time
-		};
-		//console.log(`DummyStep: time: ${stepConfiguration.time}`);
-	},
 
-	_start() {
-		const self = this;
-		return new Promise(function (fulfill, reject) {
-			setTimeout(() => {
-					//console.log(`Started the step '${self.name}'`);
-					fulfill(self);
-				},
-				self.time);
-		});
-	},
 
-	// TODO why does "can be stopped while starting" not work
-	__stop() {
-		const self = this;
-		return new Promise(function (fulfill, reject) {
-			setTimeout(() => {
-				//console.log(`Stopped the step '${self.name}'`);
-				fulfill(self);
-			}, self.time);
-		});
-	}
-}));
-
-describe('flow', function () {
-	// load the content of the flow definition
-	flow.loadFlows(manager, manager.scopeReporter, {
-		"myFlowName": {
-			"type": "kronos-flow",
-			"steps": {
-				"slowInbound": {
-					"type": "slow-start",
-					"time": 10
-				},
-				"normal": {
-					"type": "slow-start",
-					"time": 5
-				},
-				"slowOutbound": {
-					"type": "slow-start",
-					"time": 70
-				}
+const dummyFlow = {
+	"myFlowName": {
+		"type": "kronos-flow",
+		"steps": {
+			"slowInbound": {
+				"type": "slow-start",
+				"time": 10
+			},
+			"normal": {
+				"type": "slow-start",
+				"time": 5
+			},
+			"slowOutbound": {
+				"type": "slow-start",
+				"time": 70
 			}
 		}
-	});
+	}
+};
 
-	const f = manager.getFlow("myFlowName");
 
+const autoStartFlow = {
+	"myAutoStartFlow": {
+		"type": "kronos-flow",
+		"autostart": true,
+		"steps": {
+			"slowInbound": {
+				"type": "slow-start",
+				"time": 10
+			}
+		}
+	}
+};
+
+describe('flow', function () {
 	describe('static', function () {
-		testStep.checkStepStatic(manager, f);
 
 		it("autostart is false", function () {
-			assert.equal(f.autostart, false);
+			return managerPromise.then(manager => {
+				// load the content of the flow definition
+				return Flow.loadFlows(manager, dummyFlow).then(() => {
+					const f = manager.flows.myFlowName;
+					assert.ok(f);
+					assert.equal(f.name, "myFlowName");
+					assert.equal(f.autostart, false);
+					return Promise.resolve("OK");
+				});
+			});
 		});
-	});
 
-	describe('livecycle', function () {
-		testStep.checkStepLivecycle(manager, f);
-	});
-
-	describe('autostart', function () {
-		flow.loadFlows(manager, manager.scopeReporter, {
-			"autostartFlow": {
-				"type": "kronos-flow",
-				"autostart": true,
-				"steps": {
-					"slowInbound": {
-						"type": "slow-start",
-						"time": 10
-					}
-				}
-			}
+		it("autostart is true", function () {
+			return managerPromise.then(manager => {
+				// load the content of the flow definition
+				return Flow.loadFlows(manager, autoStartFlow).then(() => {
+					const f = manager.flows.myAutoStartFlow;
+					assert.ok(f);
+					assert.equal(f.name, "myAutoStartFlow");
+					assert.equal(f.autostart, true);
+					return Promise.resolve("OK");
+				});
+			});
 		});
-		const f2 = manager.getFlow("autostartFlow");
 
-		it("is set", function () {
-			assert.equal(f2.autostart, true);
-		});
-		//testStep.checkStepStatic(manager, f2);
 	});
-
 });
+
+// describe('livecycle', function () {
+// 	testStep.checkStepLivecycle(manager, f);
+// });
+//
+// 	const f2 = manager.getFlow("autostartFlow");
+//
+// 	it("is set", function () {
+// 		assert.equal(f2.autostart, true);
+// 	});
+// 	//testStep.checkStepStatic(manager, f2);
+// });

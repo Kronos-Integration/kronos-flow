@@ -28,10 +28,10 @@ const flow = require('../index.js');
 const manager = testStep.managerMock;
 
 // register the flow
-flow.registerWithManager(manager);
+//flow.registerWithManager(manager);
 
 // register the passthroughStep
-stepPassThrough.registerWithManager(manager);
+//stepPassThrough.registerWithManager(manager);
 
 
 
@@ -43,7 +43,7 @@ describe('flow-creator toJSON', function () {
 		const flowDefintion = JSON.parse(flowDefintionString);
 
 		// load the content of the flow definition
-		flow.loadFlows(manager, manager.scopeReporter, flowDefintion);
+		flow.loadFlows(manager, flowDefintion);
 
 		// get the flow from the manager
 		const myFlow = manager.getFlow("flowOne");
@@ -60,7 +60,7 @@ describe('flow-creator toJSON', function () {
 		const flowDefintion = JSON.parse(flowDefintionString);
 
 		// load the content of the flow definition
-		flow.loadFlows(manager, manager.scopeReporter, flowDefintion);
+		flow.loadFlows(manager, flowDefintion);
 
 		// get the flow from the manager
 		const myFlow = manager.getFlow("nestedComplex");

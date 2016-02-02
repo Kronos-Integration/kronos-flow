@@ -1,32 +1,32 @@
 {
-	"nestedLevel1": {
-		"description": "a simple flow for testing",
-		"endpoints": {
-			"inFile": "Gumbo_in/in",
-			"outFile": "subFlow_1/outFlow"
-		},
-		"steps": {
-			"Gumbo_in": {
-				"type": "kronos-step-passthrough",
-				"inbound": true,
-				"endpoints": {
-					"out": "subFlow_1/inFlow"
-				}
-			},
-			"subFlow_1": {
-				"type": "kronos-flow",
-				"description": "The second level flow",
-				"endpoints": {
-					"inFlow": "SubStepIn/in",
-					"outFlow": "SubStepIn/out"
-				},
-				"steps": {
-					"SubStepIn": {
-						"type": "kronos-step-passthrough",
-						"inbound": true
-					}
-				}
-			}
-		}
-	}
+  "nestedLevel1": {
+    "description": "a simple flow for testing",
+    "endpoints": {
+      "inFile": "Gumbo_in/in",
+      "outFile": "subFlow_1/outFlow"
+    },
+    "steps": {
+      "Gumbo_in": {
+        "type": "kronos-step-passthrough",
+        "inbound": true,
+        "endpoints": {
+          "out": "subFlow_1/inFlow"
+        }
+      },
+      "subFlow_1": {
+        "type": "kronos-flow",
+        "description": "The second level flow",
+        "endpoints": {
+          "inFlow": "SubStepIn/in",
+          "outFlow": "SubStepIn/out"
+        },
+        "steps": {
+          "SubStepIn": {
+            "type": "kronos-step-passthrough",
+            "inbound": true
+          }
+        }
+      }
+    }
+  }
 }
