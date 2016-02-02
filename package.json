@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/Kronos-Integration/kronos-flow#readme",
   "engines": {
-    "node": ">=4.2.1"
+    "node": ">=5"
   },
   "devDependencies": {
     "chai": "3.5.0",
@@ -29,9 +29,12 @@
     "cz-conventional-changelog": "^1.1.5",
     "kronos-message": "^1.0.1",
     "kronos-step-passthrough": "^1.2.6",
-    "kronos-test-step": "git+https://github.com/Kronos-Integration/kronos-step.git#api_rework",
+    "kronos-test-step": "3.0.0",
     "mocha": "2.4.4",
-    "semantic-release": "6.0.3"
+    "semantic-release": "6.2.0"
+  },
+  "dependencies": {
+    "kronos-step": "^3.9.0"
   },
   "contributors": [{
     "name": "Torsten Link",
@@ -41,9 +44,6 @@
     "email": "markus.felten@gmx.de"
   }],
   "license": "BSD-2-Clause",
-  "dependencies": {
-    "kronos-step": "^3.9.0"
-  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
