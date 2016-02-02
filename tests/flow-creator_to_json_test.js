@@ -28,10 +28,10 @@ const flow = require('../index.js');
 const manager = testStep.managerMock;
 
 // register the flow
-flow.registerWithManager(manager);
+//flow.registerWithManager(manager);
 
 // register the passthroughStep
-stepPassThrough.registerWithManager(manager);
+//stepPassThrough.registerWithManager(manager);
 
 
 
