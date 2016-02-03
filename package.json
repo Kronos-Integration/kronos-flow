@@ -30,7 +30,7 @@
     "kronos-message": "^2.0.1",
     "kronos-service-manager": "^3.2.0",
     "kronos-step-passthrough": "^2.0.0",
-    "kronos-test-step": "3.0.0",
+    "kronos-test-step": "3.0.1",
     "mocha": "2.4.5",
     "semantic-release": "6.2.0"
   },
