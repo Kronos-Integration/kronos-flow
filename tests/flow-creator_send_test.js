@@ -19,7 +19,7 @@ const fixturesDir = path.join(__dirname, 'fixtures');
 const step = require('kronos-step');
 const stepPassThrough = require('kronos-step-passthrough');
 const serviceManager = require('kronos-service-manager');
-const messageFactory = require('kronos-message');
+const messageFactory = require('kronos-message').createMessage;
 const Flow = require('../index.js');
 
 
