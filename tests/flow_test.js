@@ -23,7 +23,7 @@ const managerPromise = serviceManager.manager().then(manager =>
 
 		/**
 		 * A dummy step for flow testing. The step will execute the stop
-		 * and start command after the given amaount of time
+		 * and start command after the given amount of time
 		 * @param stepName The name of this step
 		 * @param time The time in millisecond it will last until the promise is fullfilled
 		 */
@@ -38,31 +38,19 @@ const managerPromise = serviceManager.manager().then(manager =>
 			},
 
 			_start() {
-				const self = this;
-				return new Promise(function (fulfill, reject) {
-					setTimeout(() => {
-							//console.log(`Started the step '${self.name}'`);
-							fulfill(self);
-						},
-						self.time);
-				});
+				return new Promise((fulfill, reject) =>
+					setTimeout(() => fulfill(this), this.time));
 			},
 
 			// TODO why does "can be stopped while starting" not work
-			__stop() {
-				const self = this;
-				return new Promise(function (fulfill, reject) {
-					setTimeout(() => {
-						//console.log(`Stopped the step '${self.name}'`);
-						fulfill(self);
-					}, self.time);
-				});
+			_stop() {
+				return new Promise((fulfill, reject) =>
+					setTimeout(() => fulfill(this), this.time));
 			}
 		})),
 	]).then(() =>
 		Promise.resolve(manager)
 	));
-
 
 
 const dummyFlow = {
@@ -127,7 +115,6 @@ describe('flow', function () {
 				});
 			});
 		});
-
 	});
 });
 
