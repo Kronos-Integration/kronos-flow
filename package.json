@@ -36,7 +36,7 @@
     "jsdoc": "3.4.0"
   },
   "dependencies": {
-    "kronos-step": "^4.1.0"
+    "kronos-step": "5.0.0"
   },
   "contributors": [
     {

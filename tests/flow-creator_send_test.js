@@ -17,6 +17,7 @@ const fixturesDir = path.join(__dirname, 'fixtures');
 
 
 const step = require('kronos-step');
+const endpoint = require('kronos-endpoint');
 const stepPassThrough = require('kronos-step-passthrough');
 const serviceManager = require('kronos-service-manager');
 const messageFactory = require('kronos-message').createMessage;
@@ -100,11 +101,11 @@ function flowTest(flowFileName, flowName) {
 
 			// This endpoint is the IN endpoint of the next step.
 			// It will be connected with the OUT endpoint of the Adpater
-			let receiveEndpoint = new step.endpoint.ReceiveEndpoint("testEndpointIn");
+			let receiveEndpoint = new endpoint.ReceiveEndpoint("testEndpointIn");
 
 			// This endpoint is the OUT endpoint of the previous step.
 			// It will be connected with the OUT endpoint of the Adpater
-			let sendEndpoint = new step.endpoint.SendEndpoint("testEndpointOut");
+			let sendEndpoint = new endpoint.SendEndpoint("testEndpointOut");
 
 
 			// This generator emulates the IN endpoint of the next step.
