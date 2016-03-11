@@ -7,11 +7,10 @@ const assert = chai.assert;
 const expect = chai.expect;
 const should = chai.should();
 
-const events = require('events');
 const testStep = require('kronos-test-step');
 
 const fs = require('fs');
-const path = require("path");
+const path = require('path');
 
 const fixturesDir = path.join(__dirname, 'fixtures');
 
