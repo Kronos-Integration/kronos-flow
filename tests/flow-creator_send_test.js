@@ -43,7 +43,7 @@ const managerPromise = serviceManager.manager().then(manager =>
 
 
 
-describe('flow: send message', function () {
+describe('flow: send message', () => {
 	// it('flow_one_step.json', function () {
 	// 	return flowTest('flow_one_step.json', 'flowOne');
 	// });
@@ -52,10 +52,7 @@ describe('flow: send message', function () {
 	// 	return flowTest('flow_two_steps.json', 'flowTwoSteps');
 	// });
 
-	it('flow_nested_level1.json', function () {
-		return flowTest('flow_nested_level1.json', 'nestedLevel1');
-	});
-
+	it('flow_nested_level1.json', () => flowTest('flow_nested_level1.json', 'nestedLevel1'));
 
 	// it('flow_nested_complex.json', function () {
 	// 	return flowTest('flow_nested_complex.json', 'nestedComplex');
@@ -86,7 +83,6 @@ function flowTest(flowFileName, flowName) {
 			// get the flow from the manager
 			const myFlow = manager.flows[flowName];
 
-
 			const msgToSend = messageFactory({
 				"file_name": "anyFile.txt"
 			});
@@ -106,10 +102,9 @@ function flowTest(flowFileName, flowName) {
 			// It will be connected with the OUT endpoint of the Adpater
 			let sendEndpoint = new endpoint.SendEndpoint("testEndpointOut");
 
-
 			// This generator emulates the IN endpoint of the next step.
 			// It will be connected with the OUT endpoint of the Adpater
-			let receiveFunction = function (message) {
+			let receiveFunction = message => {
 				// the received message should equal the sended one
 				// before comparing delete the hops
 				message.hops = [];
@@ -122,13 +117,7 @@ function flowTest(flowFileName, flowName) {
 			outEndPoint.connected = receiveEndpoint;
 			sendEndpoint.connected = inEndPoint;
 
-			return myFlow.start().then(step => {
-				sendEndpoint.receive(msgToSend);
-			});
-
+			return myFlow.start().then(step => sendEndpoint.receive(msgToSend));
 		});
 	});
-
-
-
 }

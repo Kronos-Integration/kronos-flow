@@ -86,10 +86,10 @@ const autoStartFlow = {
 	}
 };
 
-describe('flow', function () {
-	describe('static', function () {
+describe('flow', () => {
+	describe('static', () => {
 
-		it("autostart is false", function () {
+		it("autostart is false", () => {
 			return managerPromise.then(manager => {
 				// load the content of the flow definition
 				return Flow.loadFlows(manager, dummyFlow).then(() => {
@@ -102,7 +102,7 @@ describe('flow', function () {
 			});
 		});
 
-		it("autostart is true", function () {
+		it("autostart is true", () => {
 			return managerPromise.then(manager => {
 				// load the content of the flow definition
 				return Flow.loadFlows(manager, autoStartFlow).then(() => {

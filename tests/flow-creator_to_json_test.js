@@ -7,11 +7,10 @@ const assert = chai.assert;
 const expect = chai.expect;
 const should = chai.should();
 
-const events = require('events');
 const testStep = require('kronos-test-step');
 
 const fs = require('fs');
-const path = require("path");
+const path = require('path');
 
 const fixturesDir = path.join(__dirname, 'fixtures');
 
@@ -34,9 +33,8 @@ const manager = testStep.managerMock;
 //stepPassThrough.registerWithManager(manager);
 
 
-
-describe('flow-creator toJSON', function () {
-	xit('flowOneStep', function (done) {
+describe('flow-creator toJSON', () => {
+	xit('flowOneStep', done => {
 		// load the json file
 		const flowDefintionString = fs.readFileSync(path.join(fixturesDir, "flow_one_step.json"), "utf-8");
 		const flowDefintionReference = JSON.parse(flowDefintionString);
@@ -53,7 +51,7 @@ describe('flow-creator toJSON', function () {
 	});
 
 
-	xit('nestedComplex', function (done) {
+	xit('nestedComplex', done => {
 		// load the json file
 		const flowDefintionString = fs.readFileSync(path.join(fixturesDir, "flow_nested_complex.json"), "utf-8");
 		const flowDefintionReference = JSON.parse(flowDefintionString);
