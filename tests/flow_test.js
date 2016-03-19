@@ -88,7 +88,6 @@ const autoStartFlow = {
 
 describe('flow', () => {
 	describe('static', () => {
-
 		it("autostart is false", () => {
 			return managerPromise.then(manager => {
 				// load the content of the flow definition

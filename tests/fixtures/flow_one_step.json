@@ -8,10 +8,7 @@
 		"steps": {
 			"Gumbo_in": {
 				"type": "kronos-step-passthrough",
-				"inbound": true,
-				"endpoints": {
-					"out": "flowOne/out"
-				}
+				"inbound": true
 			}
 		}
 	}
