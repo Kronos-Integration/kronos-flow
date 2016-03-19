@@ -27,13 +27,13 @@
     "chai": "3.5.0",
     "cz-conventional-changelog": "^1.1.5",
     "istanbul": "0.4.2",
+    "jsdoc": "3.4.0",
     "kronos-message": "^2.0.1",
     "kronos-service-manager": "^3.2.10",
     "kronos-step-passthrough": "^2.0.0",
     "kronos-test-step": "3.0.2",
     "mocha": "2.4.5",
-    "semantic-release": "6.2.0",
-    "jsdoc": "3.4.0"
+    "semantic-release": "6.2.1"
   },
   "dependencies": {
     "kronos-step": "5.0.0"
