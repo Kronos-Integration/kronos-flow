@@ -107,10 +107,11 @@ describe('flow', () => {
 						"optional-service": {
 							"type": "slow-start",
 							"endpoints": {
-								/* TODO	"e1": {
-										"target": "service:a1",
-										"mandatory": false
-									}*/
+								"e1": {
+									"in": true,
+									"target": "aService:a1",
+									"mandatory": false
+								}
 							}
 						}
 					}
