@@ -92,7 +92,7 @@ describe('flow', () => {
 		describe('service', () => {
 			describe('optional', () => {
 				it("register", done => {
-					manager.registerFlow(manager.createStepInstanceFromConfig({
+					const s = manager.createStepInstanceFromConfig({
 						"name": "myFlowName",
 						"type": "kronos-flow",
 						"steps": {
@@ -107,18 +107,15 @@ describe('flow', () => {
 								}
 							}
 						}
-					}, manager)).then(s => {
-						s.start().then(() => s.stop().then(() => {
-							done();
-						}));
-					});
+					}, manager);
+					s.start().then(() => s.stop().then(() => done()));
 				});
 			});
 			describe('mandatory', () => {
 				describe('missing', () => {
 					it("register", done => {
 						try {
-							manager.registerFlow(manager.createStepInstanceFromConfig({
+							manager.createStepInstanceFromConfig({
 								"name": "myFlowName",
 								"type": "kronos-flow",
 								"steps": {
@@ -133,14 +130,9 @@ describe('flow', () => {
 										}
 									}
 								}
-							}, manager)).then(s =>
-								done(new Error(`should not register`))
-							).catch(e => {
-								console.log(`A catch ${e}`);
-								done();
-							});
+							}, manager);
 						} catch (e) {
-							console.log(`B catch ${e}`);
+							assert.match(e, /Service 'aService' not found/);
 							done();
 						}
 					});
