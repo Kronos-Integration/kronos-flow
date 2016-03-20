@@ -35,6 +35,8 @@ describe('flow', () => {
 				},
 
 				_start() {
+					//console.log(`start: ${this.name} ${this.time}`);
+
 					return new Promise((fulfill, reject) =>
 						setTimeout(() => fulfill(this), this.time));
 				},
@@ -86,53 +88,85 @@ describe('flow', () => {
 		);
 	});
 
-	describe('livecycle', () => {
-		before(done => {
+	describe('connections', () => {
+		describe('service', () => {
+			describe('optional', () => {
+				it("register", done => {
+					manager.registerFlow(manager.createStepInstanceFromConfig({
+						"name": "myFlowName",
+						"type": "kronos-flow",
+						"steps": {
+							"with-service": {
+								"type": "slow-start",
+								"endpoints": {
+									"optional": {
+										"in": true,
+										"target": "aService:a1",
+										"mandatory": false
+									}
+								}
+							}
+						}
+					}, manager)).then(s => {
+						s.start().then(() => s.stop().then(() => {
+							done();
+						}));
+					});
+				});
+			});
+			describe('mandatory', () => {
+				describe('missing', () => {
+					it("register", done => {
+						try {
+							manager.registerFlow(manager.createStepInstanceFromConfig({
+								"name": "myFlowName",
+								"type": "kronos-flow",
+								"steps": {
+									"with-service": {
+										"type": "slow-start",
+										"endpoints": {
+											"optional": {
+												"in": true,
+												"target": "aService:a1",
+												"mandatory": true
+											}
+										}
+									}
+								}
+							}, manager)).then(s =>
+								done(new Error(`should not register`))
+							).catch(e => {
+								console.log(`A catch ${e}`);
+								done();
+							});
+						} catch (e) {
+							console.log(`B catch ${e}`);
+							done();
+						}
+					});
+				});
+			});
+		});
+
+		before(done =>
 			Flow.loadFlows(manager, {
 				"myFlowName": {
 					"type": "kronos-flow",
 					"steps": {
-						"slowInbound": {
-							"type": "slow-start",
-							"time": 10
-						},
 						"normal": {
 							"type": "slow-start",
 							"time": 5
-						},
-						"slowOutbound": {
-							"type": "slow-start",
-							"time": 70
-						},
-						"optional-service": {
-							"type": "slow-start",
-							"endpoints": {
-								"e1": {
-									"in": true,
-									"target": "aService:a1",
-									"mandatory": false
-								}
-							}
 						}
 					}
 				}
-			}).then(() => {
-				done();
-			});
-		});
+			}).then(() => done())
+		);
 
 		it("basic", done => {
 			const s = manager.flows.myFlowName;
-
 			s.start().then(() => s.stop().then(() => {
 				done();
 			}));
-
-			// TODO how to call this without it()
-			testStep.checkStepLivecycle(manager, s, (step, state, livecycle, done) => {
-				console.log('C');
-				done();
-			});
 		});
 	});
 });
