@@ -11,39 +11,6 @@ const chai = require('chai'),
 	Flow = require('../lib/flow'),
 	step = require('kronos-step');
 
-const dummyFlow = {
-	"myFlowName": {
-		"type": "kronos-flow",
-		"steps": {
-			"slowInbound": {
-				"type": "slow-start",
-				"time": 10
-			},
-			"normal": {
-				"type": "slow-start",
-				"time": 5
-			},
-			"slowOutbound": {
-				"type": "slow-start",
-				"time": 70
-			}
-		}
-	}
-};
-
-const autoStartFlow = {
-	"myAutoStartFlow": {
-		"type": "kronos-flow",
-		"autostart": true,
-		"steps": {
-			"slowInbound": {
-				"type": "slow-start",
-				"time": 10
-			}
-		}
-	}
-};
-
 describe('flow', () => {
 	let manager;
 
@@ -76,22 +43,42 @@ describe('flow', () => {
 					return new Promise((fulfill, reject) =>
 						setTimeout(() => fulfill(this), this.time));
 				}
-			}));
-			done();
+			})).then(() => done());
 		});
 	});
 
 	describe('autostart', () => {
 		it("is false", () =>
-			Flow.loadFlows(manager, dummyFlow).then(() => {
-				const f = manager.flows.myFlowName;
-				assert.equal(f.name, "myFlowName");
+			Flow.loadFlows(manager, {
+				"myFlow": {
+					"type": "kronos-flow",
+					"steps": {
+						"slowInbound": {
+							"type": "slow-start",
+							"time": 10
+						}
+					}
+				}
+			}).then(() => {
+				const f = manager.flows.myFlow;
+				assert.equal(f.name, "myFlow");
 				assert.equal(f.autostart, false);
 			})
 		);
 
 		it("is true", () =>
-			Flow.loadFlows(manager, autoStartFlow).then(() => {
+			Flow.loadFlows(manager, {
+				"myAutoStartFlow": {
+					"type": "kronos-flow",
+					"autostart": true,
+					"steps": {
+						"slowInbound": {
+							"type": "slow-start",
+							"time": 10
+						}
+					}
+				}
+			}).then(() => {
 				const f = manager.flows.myAutoStartFlow;
 				assert.equal(f.name, "myAutoStartFlow");
 				assert.equal(f.autostart, true);
@@ -101,23 +88,50 @@ describe('flow', () => {
 
 	describe('livecycle', () => {
 		before(done => {
-			console.log(`A ${manager}`);
-			Flow.loadFlows(manager, dummyFlow).then(() => {
+			Flow.loadFlows(manager, {
+				"myFlowName": {
+					"type": "kronos-flow",
+					"steps": {
+						"slowInbound": {
+							"type": "slow-start",
+							"time": 10
+						},
+						"normal": {
+							"type": "slow-start",
+							"time": 5
+						},
+						"slowOutbound": {
+							"type": "slow-start",
+							"time": 70
+						},
+						"optional-service": {
+							"type": "slow-start",
+							"endpoints": {
+								/* TODO	"e1": {
+										"target": "service:a1",
+										"mandatory": false
+									}*/
+							}
+						}
+					}
+				}
+			}).then(() => {
 				done();
 			});
 		});
 
 		it("basic", done => {
-			try {
-				console.log(`B ${manager}`);
-				testStep.checkStepLivecycle(manager, manager.flows.myFlowName, (step, state, livecycle, done) => {
-					console.log('C');
-					done();
-				});
-			} catch (e) {
-				console.log(e);
-			}
-			setTimeout(() => done(), 500);
+			const s = manager.flows.myFlowName;
+
+			s.start().then(() => s.stop().then(() => {
+				done();
+			}));
+
+			// TODO how to call this without it()
+			testStep.checkStepLivecycle(manager, s, (step, state, livecycle, done) => {
+				console.log('C');
+				done();
+			});
 		});
 	});
 });
