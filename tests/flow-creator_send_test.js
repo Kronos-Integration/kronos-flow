@@ -1,32 +1,27 @@
-/* global describe, it, beforeEach */
+/* global describe, it, xit, before, beforeEach, after, afterEach */
 /* jslint node: true, esnext: true */
 "use strict";
 
-const chai = require('chai');
-const assert = chai.assert;
-const expect = chai.expect;
-const should = chai.should();
-
-const testStep = require('kronos-test-step');
-
-const fs = require('fs');
-const path = require('path');
+const chai = require('chai'),
+	assert = chai.assert,
+	expect = chai.expect,
+	should = chai.should(),
+	fs = require('fs'),
+	path = require('path'),
+	ksm = require('kronos-service-manager'),
+	testStep = require('kronos-test-step'),
+	step = require('kronos-step'),
+	endpoint = require('kronos-endpoint'),
+	stepPassThrough = require('kronos-step-passthrough'),
+	messageFactory = require('kronos-message').createMessage,
+	Flow = require('../index.js');
 
 const fixturesDir = path.join(__dirname, 'fixtures');
-
-
-const step = require('kronos-step');
-const endpoint = require('kronos-endpoint');
-const stepPassThrough = require('kronos-step-passthrough');
-const serviceManager = require('kronos-service-manager');
-const messageFactory = require('kronos-message').createMessage;
-const Flow = require('../index.js');
-
 
 // ---------------------------
 // Create a mock manager
 // ---------------------------
-const managerPromise = serviceManager.manager().then(manager =>
+const managerPromise = ksm.manager().then(manager =>
 	Promise.all([
 		Flow.registerWithManager(manager),
 

@@ -11,44 +11,6 @@ const chai = require('chai'),
 	Flow = require('../lib/flow'),
 	step = require('kronos-step');
 
-
-let manager;
-
-before(done => {
-	ksm.manager({}, [require('../index')]).then(m => {
-		manager = m;
-
-		/**
-		 * A dummy step for flow testing. The step will execute the stop
-		 * and start command after the given amount of time
-		 * @param stepName The name of this step
-		 * @param time The time in millisecond it will last until the promise is fullfilled
-		 */
-		manager.registerStep(Object.assign({}, step.Step, {
-			"name": "slow-start",
-
-			initialize(manager, name, stepConfiguration, props) {
-				props.time = {
-					value: stepConfiguration.time
-				};
-				//console.log(`DummyStep: time: ${stepConfiguration.time}`);
-			},
-
-			_start() {
-				return new Promise((fulfill, reject) =>
-					setTimeout(() => fulfill(this), this.time));
-			},
-
-			_stop() {
-				return new Promise((fulfill, reject) =>
-					setTimeout(() => fulfill(this), this.time));
-			}
-		}));
-		done();
-	});
-});
-
-
 const dummyFlow = {
 	"myFlowName": {
 		"type": "kronos-flow",
@@ -83,20 +45,54 @@ const autoStartFlow = {
 };
 
 describe('flow', () => {
-	describe('static', () => {
-		it("autostart is false", () =>
+	let manager;
+
+	before('prepare manager', done => {
+		ksm.manager({}, [require('../index')]).then(m => {
+			manager = m;
+
+			/**
+			 * A dummy step for flow testing. The step will execute the stop
+			 * and start command after the given amount of time
+			 * @param stepName The name of this step
+			 * @param time The time in millisecond it will last until the promise is fullfilled
+			 */
+			manager.registerStep(Object.assign({}, step.Step, {
+				"name": "slow-start",
+
+				initialize(manager, name, stepConfiguration, props) {
+					props.time = {
+						value: stepConfiguration.time
+					};
+					//console.log(`DummyStep: time: ${stepConfiguration.time}`);
+				},
+
+				_start() {
+					return new Promise((fulfill, reject) =>
+						setTimeout(() => fulfill(this), this.time));
+				},
+
+				_stop() {
+					return new Promise((fulfill, reject) =>
+						setTimeout(() => fulfill(this), this.time));
+				}
+			}));
+			done();
+		});
+	});
+
+	describe('autostart', () => {
+		it("is false", () =>
 			Flow.loadFlows(manager, dummyFlow).then(() => {
 				const f = manager.flows.myFlowName;
-				assert.ok(f);
 				assert.equal(f.name, "myFlowName");
 				assert.equal(f.autostart, false);
 			})
 		);
 
-		it("autostart is true", () =>
+		it("is true", () =>
 			Flow.loadFlows(manager, autoStartFlow).then(() => {
 				const f = manager.flows.myAutoStartFlow;
-				assert.ok(f);
 				assert.equal(f.name, "myAutoStartFlow");
 				assert.equal(f.autostart, true);
 			})
@@ -104,20 +100,24 @@ describe('flow', () => {
 	});
 
 	describe('livecycle', () => {
-		console.log(`A ${manager}`);
-		it("basic", done =>
+		before(done => {
+			console.log(`A ${manager}`);
 			Flow.loadFlows(manager, dummyFlow).then(() => {
-				try {
-					testStep.checkStepLivecycle(manager, manager.flows.myFlowName, (step, state, livecycle, done) => {
-						console.log('B');
-						done();
-					});
-				} catch (e) {
-					console.log(e);
-				}
-				setTimeout(() => done(), 100);
-				//done();
-			})
-		);
+				done();
+			});
+		});
+
+		it("basic", done => {
+			try {
+				console.log(`B ${manager}`);
+				testStep.checkStepLivecycle(manager, manager.flows.myFlowName, (step, state, livecycle, done) => {
+					console.log('C');
+					done();
+				});
+			} catch (e) {
+				console.log(e);
+			}
+			setTimeout(() => done(), 500);
+		});
 	});
 });
