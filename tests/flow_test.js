@@ -1,4 +1,4 @@
-/* global describe, it, beforeEach */
+/* global describe, it, xit, before, beforeEach, after, afterEach */
 /* jslint node: true, esnext: true */
 "use strict";
 
@@ -6,19 +6,17 @@ const chai = require('chai'),
 	assert = chai.assert,
 	expect = chai.expect,
 	should = chai.should(),
-	stepPassThrough = require('kronos-step-passthrough'),
-	serviceManager = require('kronos-service-manager'),
+	ksm = require('kronos-service-manager'),
 	testStep = require('kronos-test-step'),
 	Flow = require('../lib/flow'),
 	step = require('kronos-step');
 
 
-// ---------------------------
-// Create a mock manager
-// ---------------------------
-const managerPromise = serviceManager.manager().then(manager =>
-	Promise.all([
-		manager.registerStep(Flow.FlowFactory),
+let manager;
+
+before(done => {
+	ksm.manager({}, [require('../index')]).then(m => {
+		manager = m;
 
 		/**
 		 * A dummy step for flow testing. The step will execute the stop
@@ -41,15 +39,14 @@ const managerPromise = serviceManager.manager().then(manager =>
 					setTimeout(() => fulfill(this), this.time));
 			},
 
-			// TODO why does "can be stopped while starting" not work
 			_stop() {
 				return new Promise((fulfill, reject) =>
 					setTimeout(() => fulfill(this), this.time));
 			}
-		})),
-	]).then(() =>
-		Promise.resolve(manager)
-	));
+		}));
+		done();
+	});
+});
 
 
 const dummyFlow = {
@@ -72,7 +69,6 @@ const dummyFlow = {
 	}
 };
 
-
 const autoStartFlow = {
 	"myAutoStartFlow": {
 		"type": "kronos-flow",
@@ -88,42 +84,40 @@ const autoStartFlow = {
 
 describe('flow', () => {
 	describe('static', () => {
-		it("autostart is false", () => {
-			return managerPromise.then(manager => {
-				// load the content of the flow definition
-				return Flow.loadFlows(manager, dummyFlow).then(() => {
-					const f = manager.flows.myFlowName;
-					assert.ok(f);
-					assert.equal(f.name, "myFlowName");
-					assert.equal(f.autostart, false);
-					return Promise.resolve("OK");
-				});
-			});
-		});
+		it("autostart is false", () =>
+			Flow.loadFlows(manager, dummyFlow).then(() => {
+				const f = manager.flows.myFlowName;
+				assert.ok(f);
+				assert.equal(f.name, "myFlowName");
+				assert.equal(f.autostart, false);
+			})
+		);
 
-		it("autostart is true", () => {
-			return managerPromise.then(manager => {
-				// load the content of the flow definition
-				return Flow.loadFlows(manager, autoStartFlow).then(() => {
-					const f = manager.flows.myAutoStartFlow;
-					assert.ok(f);
-					assert.equal(f.name, "myAutoStartFlow");
-					assert.equal(f.autostart, true);
-					return Promise.resolve("OK");
-				});
-			});
-		});
+		it("autostart is true", () =>
+			Flow.loadFlows(manager, autoStartFlow).then(() => {
+				const f = manager.flows.myAutoStartFlow;
+				assert.ok(f);
+				assert.equal(f.name, "myAutoStartFlow");
+				assert.equal(f.autostart, true);
+			})
+		);
+	});
+
+	describe('livecycle', () => {
+		console.log(`A ${manager}`);
+		it("basic", done =>
+			Flow.loadFlows(manager, dummyFlow).then(() => {
+				try {
+					testStep.checkStepLivecycle(manager, manager.flows.myFlowName, (step, state, livecycle, done) => {
+						console.log('B');
+						done();
+					});
+				} catch (e) {
+					console.log(e);
+				}
+				setTimeout(() => done(), 100);
+				//done();
+			})
+		);
 	});
 });
-
-// describe('livecycle', function () {
-// 	testStep.checkStepLivecycle(manager, f);
-// });
-//
-// 	const f2 = manager.getFlow("autostartFlow");
-//
-// 	it("is set", function () {
-// 		assert.equal(f2.autostart, true);
-// 	});
-// 	//testStep.checkStepStatic(manager, f2);
-// });
