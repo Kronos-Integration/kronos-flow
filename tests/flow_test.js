@@ -9,7 +9,10 @@ const chai = require('chai'),
 	ksm = require('kronos-service-manager'),
 	testStep = require('kronos-test-step'),
 	Flow = require('../lib/flow'),
-	step = require('kronos-step');
+	step = require('kronos-step'),
+	service = require('kronos-service'),
+	endpoint = require('kronos-endpoint');
+
 
 describe('flow', () => {
 	let manager;
@@ -134,9 +137,26 @@ describe('flow', () => {
 				});
 
 				describe('missing service', () => {
-					it("create", () => {
-						try {
-							manager.createStepInstanceFromConfig({
+					it.only("create", done => {
+						class AService extends service.Service {
+							static get name() {
+								return "aService";
+							}
+							get type() {
+								return AService.name;
+							}
+
+							constructor(config, owner) {
+								super(config, owner);
+								this.addEndpoint(new endpoint.ReceiveEndpoint('a1', this)).receive = entry => Promise.resolve();
+							}
+						}
+
+
+						manager.registerService(new AService({
+							name: 'aService'
+						}, manager)).then(svc => {
+							const s = manager.createStepInstanceFromConfig({
 								"name": "myFlowName",
 								"type": "kronos-flow",
 								"steps": {
@@ -144,7 +164,7 @@ describe('flow', () => {
 										"type": "slow-start",
 										"endpoints": {
 											"mandatory": {
-												"in": true,
+												"out": true,
 												"target": "aService:a1",
 												"mandatory": true
 											}
@@ -152,9 +172,14 @@ describe('flow', () => {
 									}
 								}
 							}, manager);
-						} catch (e) {
-							assert.match(e, /Service 'aService' not found/);
-						}
+
+							svc.start().then(() => console.log('service started'));
+							console.log(
+								`service registered: ${manager.services.aService} ${svc.name}:${svc.endpoints.a1.name}`);
+							console.log(`outstanding ${s.outstandingConnections.length}`);
+
+							s.start().then(() => s.stop().then(() => done()));
+						});
 					});
 				});
 				describe('missing service endpoint', () => {
