@@ -137,7 +137,7 @@ describe('flow', () => {
 				});
 
 				describe('missing service', () => {
-					it.only("create", done => {
+					it("create", done => {
 						class AService extends service.Service {
 							static get name() {
 								return "aService";
