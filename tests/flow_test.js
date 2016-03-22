@@ -138,48 +138,39 @@ describe('flow', () => {
 
 				describe('missing service', () => {
 					it("create", done => {
-						class AService extends service.Service {
+						class TestService extends service.Service {
 							static get name() {
-								return "aService";
+								return "testService";
 							}
 							get type() {
-								return AService.name;
+								return TestService.name;
 							}
-
 							constructor(config, owner) {
 								super(config, owner);
 								this.addEndpoint(new endpoint.ReceiveEndpoint('a1', this)).receive = entry => Promise.resolve();
 							}
 						}
 
-
-						manager.registerService(new AService({
-							name: 'aService'
-						}, manager)).then(svc => {
-							const s = manager.createStepInstanceFromConfig({
-								"name": "myFlowName",
-								"type": "kronos-flow",
-								"steps": {
-									"with-service": {
-										"type": "slow-start",
-										"endpoints": {
-											"mandatory": {
-												"out": true,
-												"target": "aService:a1",
-												"mandatory": true
-											}
+						const s = manager.createStepInstanceFromConfig({
+							"name": "myFlowName",
+							"type": "kronos-flow",
+							"steps": {
+								"with-service": {
+									"type": "slow-start",
+									"endpoints": {
+										"mandatory": {
+											"out": true,
+											"target": "testService:a1",
+											"mandatory": true
 										}
 									}
 								}
-							}, manager);
+							}
+						}, manager);
 
-							svc.start().then(() => console.log('service started'));
-							console.log(
-								`service registered: ${manager.services.aService} ${svc.name}:${svc.endpoints.a1.name}`);
-							console.log(`outstanding ${s.outstandingConnections.length}`);
+						manager.registerServiceFactory(TestService);
 
-							s.start().then(() => s.stop().then(() => done()));
-						});
+						s.start().then(() => s.stop().then(() => done()));
 					});
 				});
 				describe('missing service endpoint', () => {
