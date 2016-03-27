@@ -29,14 +29,14 @@
     "istanbul": "0.4.2",
     "jsdoc": "3.4.0",
     "kronos-message": "^2.0.1",
-    "kronos-service-manager": "^3.2.11",
+    "kronos-service-manager": "3.2.12",
     "kronos-step-passthrough": "2.0.2",
     "kronos-test-step": "3.0.3",
     "mocha": "2.4.5",
     "semantic-release": "6.2.1"
   },
   "dependencies": {
-    "kronos-step": "5.0.2"
+    "kronos-step": "5.1.0"
   },
   "contributors": [
     {
