@@ -30,7 +30,7 @@
     "jsdoc": "3.4.0",
     "kronos-message": "^2.0.1",
     "kronos-service-manager": "3.3.2",
-    "kronos-step-passthrough": "^2.0.5",
+    "kronos-step-passthrough": "^2.0.6",
     "kronos-test-step": "3.1.0",
     "mocha": "2.4.5",
     "semantic-release": "6.2.1"
