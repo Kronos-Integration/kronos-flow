@@ -29,15 +29,15 @@
     "istanbul": "0.4.3",
     "jsdoc": "3.4.0",
     "kronos-message": "^2.0.1",
-    "kronos-service-manager": "^3.3.5",
+    "kronos-service-manager": "^3.3.6",
     "kronos-step-passthrough": "^2.0.7",
     "kronos-test-step": "3.1.1",
     "mocha": "2.4.5",
     "semantic-release": "6.2.1"
   },
   "dependencies": {
-    "kronos-endpoint": "^2.8.0",
-    "kronos-step": "^5.2.1"
+    "kronos-endpoint": "^2.9.1",
+    "kronos-step": "^5.2.2"
   },
   "contributors": [
     {
