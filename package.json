@@ -8,24 +8,24 @@
   "main": "index.js",
   "scripts": {
     "cover": "node ./node_modules/istanbul/lib/cli.js cover --hook-run-in-context ./node_modules/mocha/bin/_mocha -- --R spec --U exports tests/*_test.js",
-    "doc": "jsdoc lib/*.js",
-    "test": "mocha tests/*_test.js",
+    "doc": "node ./node_modules/.bin/jsdoc lib/*.js",
+    "test": "node ./node_modules/.bin/mocha tests/*_test.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Kronos-Integration/kronos-flow.git"
+    "url": "https://github.com/Kronos-Integration/kronos-flow.git"
   },
   "bugs": {
     "url": "https://github.com/Kronos-Integration/kronos-flow/issues"
   },
   "homepage": "https://github.com/Kronos-Integration/kronos-flow#readme",
   "engines": {
-    "node": ">=5"
+    "node": ">=6"
   },
   "devDependencies": {
     "chai": "3.5.0",
-    "cz-conventional-changelog": "^1.1.6",
+    "cz-conventional-changelog": "1.1.6",
     "istanbul": "0.4.3",
     "jsdoc": "3.4.0",
     "kronos-message": "^2.0.1",
