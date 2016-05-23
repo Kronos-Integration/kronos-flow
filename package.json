@@ -37,15 +37,18 @@
   },
   "dependencies": {
     "kronos-endpoint": "^2.10.1",
-    "kronos-step": "^5.3.1"
+    "kronos-step": "^5.3.2"
   },
-  "contributors": [{
-    "name": "Torsten Link",
-    "email": "torstenlink@gmx.de"
-  }, {
-    "name": "Markus Felten",
-    "email": "markus.felten@gmx.de"
-  }],
+  "contributors": [
+    {
+      "name": "Torsten Link",
+      "email": "torstenlink@gmx.de"
+    },
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ],
   "license": "BSD-2-Clause",
   "config": {
     "commitizen": {
