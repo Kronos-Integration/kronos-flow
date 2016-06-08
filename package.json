@@ -36,7 +36,7 @@
     "semantic-release": "6.3.0"
   },
   "dependencies": {
-    "kronos-endpoint": "^2.12.0",
+    "kronos-endpoint": "^2.13.0",
     "kronos-step": "^5.3.2"
   },
   "contributors": [
