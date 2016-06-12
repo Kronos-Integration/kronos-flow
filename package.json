@@ -29,7 +29,7 @@
     "istanbul": "0.4.3",
     "jsdoc": "3.4.0",
     "kronos-message": "^2.0.1",
-    "kronos-service-manager": "^3.4.4",
+    "kronos-service-manager": "^3.4.5",
     "kronos-step-passthrough": "^2.0.13",
     "kronos-test-step": "^3.1.4",
     "mocha": "2.5.3",
