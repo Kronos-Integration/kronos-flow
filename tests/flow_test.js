@@ -251,7 +251,7 @@ describe('flow', () => {
 			});
 		});
 
-		before(done =>
+		before(() =>
 			Flow.loadFlows(manager, {
 				"myFlowName": {
 					"type": "kronos-flow",
@@ -262,7 +262,7 @@ describe('flow', () => {
 						}
 					}
 				}
-			}).then(() => done())
+			})
 		);
 
 		it("basic", done => {
