@@ -32,20 +32,23 @@
     "kronos-service-manager": "^3.4.10",
     "kronos-step-passthrough": "^2.0.14",
     "kronos-test-step": "^3.1.4",
-    "mocha": "2.5.3",
+    "mocha": "3.0.0",
     "semantic-release": "6.3.0"
   },
   "dependencies": {
     "kronos-endpoint": "^2.13.1",
     "kronos-step": "^5.3.4"
   },
-  "contributors": [{
-    "name": "Torsten Link",
-    "email": "torstenlink@gmx.de"
-  }, {
-    "name": "Markus Felten",
-    "email": "markus.felten@gmx.de"
-  }],
+  "contributors": [
+    {
+      "name": "Torsten Link",
+      "email": "torstenlink@gmx.de"
+    },
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ],
   "license": "BSD-2-Clause",
   "config": {
     "commitizen": {
