@@ -1,5 +1,5 @@
 /* jslint node: true, esnext: true */
-"use strict";
+'use strict';
 
 const Flow = require('./lib/flow');
 
