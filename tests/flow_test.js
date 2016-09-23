@@ -1,6 +1,6 @@
 /* global describe, it, xit, before, beforeEach, after, afterEach */
 /* jslint node: true, esnext: true */
-"use strict";
+'use strict';
 
 const chai = require('chai'),
 	assert = chai.assert,
@@ -28,7 +28,7 @@ describe('flow', () => {
 			 * @param time The time in millisecond it will last until the promise is fullfilled
 			 */
 			manager.registerStep(Object.assign({}, step.Step, {
-				"name": "slow-start",
+				name: 'slow-start',
 
 				initialize(manager, name, stepConfiguration, props) {
 					props.time = {
@@ -53,39 +53,39 @@ describe('flow', () => {
 	});
 
 	describe('autostart', () => {
-		it("is false", () =>
+		it('is false', () =>
 			Flow.loadFlows(manager, {
-				"myFlow": {
-					"type": "kronos-flow",
-					"steps": {
-						"slowInbound": {
-							"type": "slow-start",
-							"time": 10
+				myFlow: {
+					type: 'kronos-flow',
+					steps: {
+						slowInbound: {
+							type: 'slow-start',
+							time: 10
 						}
 					}
 				}
 			}).then(() => {
 				const f = manager.flows.myFlow;
-				assert.equal(f.name, "myFlow");
+				assert.equal(f.name, 'myFlow');
 				assert.equal(f.autostart, false);
 			})
 		);
 
-		it("is true", () =>
+		it('is true', () =>
 			Flow.loadFlows(manager, {
-				"myAutoStartFlow": {
-					"type": "kronos-flow",
-					"autostart": true,
-					"steps": {
-						"slowInbound": {
-							"type": "slow-start",
-							"time": 10
+				myAutoStartFlow: {
+					type: 'kronos-flow',
+					autostart: true,
+					steps: {
+						slowInbound: {
+							type: 'slow-start',
+							time: 10
 						}
 					}
 				}
 			}).then(() => {
 				const f = manager.flows.myAutoStartFlow;
-				assert.equal(f.name, "myAutoStartFlow");
+				assert.equal(f.name, 'myAutoStartFlow');
 				assert.equal(f.autostart, true);
 			})
 		);
@@ -94,18 +94,17 @@ describe('flow', () => {
 	describe('connections', () => {
 		describe('service', () => {
 			describe('optional', () => {
-				it("create", done => {
+				it('create', done => {
 					const s = manager.createStepInstanceFromConfig({
-						"name": "myFlowName",
-						"type": "kronos-flow",
-						"steps": {
-							"with-service": {
-								"type": "slow-start",
-								"endpoints": {
-									"optional": {
-										"in": true,
-										"target": "aService:a1",
-										"mandatory": false
+						name: 'myFlowName',
+						type: 'kronos-flow',
+						steps: {
+							'with-service': {
+								type: 'slow-start',
+								endpoints: {
+									optional: { in : true,
+										target: 'aService:a1',
+											mandatory: false
 									}
 								}
 							}
@@ -116,17 +115,17 @@ describe('flow', () => {
 			});
 			describe('mandatory', () => {
 				describe('present', () => {
-					it("create", done => {
+					it('create', done => {
 						const s = manager.createStepInstanceFromConfig({
-							"name": "myFlowName",
-							"type": "kronos-flow",
-							"steps": {
-								"with-service": {
-									"type": "slow-start",
-									"endpoints": {
-										"mandatory": {
-											"out": true,
-											"target": "config:config"
+							name: 'myFlowName',
+							type: 'kronos-flow',
+							steps: {
+								'with-service': {
+									type: 'slow-start',
+									endpoints: {
+										mandatory: {
+											out: true,
+											target: 'config:config'
 										}
 									}
 								}
@@ -137,10 +136,10 @@ describe('flow', () => {
 				});
 
 				describe('missing service', () => {
-					it("create", done => {
+					it('create', done => {
 						class TestService extends service.Service {
 							static get name() {
-								return "testService";
+								return 'testService';
 							}
 							get type() {
 								return TestService.name;
@@ -152,16 +151,16 @@ describe('flow', () => {
 						}
 
 						const s = manager.createStepInstanceFromConfig({
-							"name": "myFlowName",
-							"type": "kronos-flow",
-							"steps": {
-								"with-service": {
-									"type": "slow-start",
-									"endpoints": {
-										"mandatory": {
-											"out": true,
-											"target": "testService:a1",
-											"mandatory": true
+							name: 'myFlowName',
+							type: 'kronos-flow',
+							steps: {
+								'with-service': {
+									type: 'slow-start',
+									endpoints: {
+										mandatory: {
+											out: true,
+											target: 'testService:a1',
+											mandatory: true
 										}
 									}
 								}
@@ -174,18 +173,17 @@ describe('flow', () => {
 					});
 				});
 				describe('missing service endpoint', () => {
-					it("create", () => {
+					it('create', () => {
 						try {
 							manager.createStepInstanceFromConfig({
-								"name": "myFlowName",
-								"type": "kronos-flow",
-								"steps": {
-									"with-service": {
-										"type": "slow-start",
-										"endpoints": {
-											"mandatory": {
-												"in": true,
-												"target": "config:a1"
+								name: 'myFlowName',
+								type: 'kronos-flow',
+								steps: {
+									'with-service': {
+										type: 'slow-start',
+										endpoints: {
+											mandatory: { in : true,
+												target: 'config:a1'
 											}
 										}
 									}
@@ -202,19 +200,18 @@ describe('flow', () => {
 		describe('step', () => {
 			describe('mandatory', () => {
 				describe('missing step', () => {
-					it("create", () => {
+					it('create', () => {
 						try {
 							manager.createStepInstanceFromConfig({
-								"name": "myFlowName",
-								"type": "kronos-flow",
-								"steps": {
-									"s1": {
-										"type": "slow-start",
-										"endpoints": {
-											"mandatory": {
-												"in": true,
-												"target": "aStep/a1",
-												"mandatory": true
+								name: 'myFlowName',
+								type: 'kronos-flow',
+								steps: {
+									s1: {
+										type: 'slow-start',
+										endpoints: {
+											mandatory: { in : true,
+												target: 'aStep/a1',
+													mandatory: true
 											}
 										}
 									}
@@ -226,18 +223,17 @@ describe('flow', () => {
 					});
 				});
 				describe('missing step endpoint', () => {
-					it("create", () => {
+					it('create', () => {
 						try {
 							manager.createStepInstanceFromConfig({
-								"name": "myFlowName",
-								"type": "kronos-flow",
-								"steps": {
-									"s1": {
-										"type": "slow-start",
-										"endpoints": {
-											"mandatory": {
-												"in": true,
-												"target": "s1/a1",
+								name: 'myFlowName',
+								type: 'kronos-flow',
+								steps: {
+									s1: {
+										type: 'slow-start',
+										endpoints: {
+											mandatory: { in : true,
+												target: 's1/a1'
 											}
 										}
 									}
@@ -253,19 +249,19 @@ describe('flow', () => {
 
 		before(() =>
 			Flow.loadFlows(manager, {
-				"myFlowName": {
-					"type": "kronos-flow",
-					"steps": {
-						"normal": {
-							"type": "slow-start",
-							"time": 5
+				myFlowName: {
+					type: 'kronos-flow',
+					steps: {
+						normal: {
+							type: 'slow-start',
+							time: 5
 						}
 					}
 				}
 			})
 		);
 
-		it("basic", done => {
+		it('basic', done => {
 			const s = manager.flows.myFlowName;
 			s.start().then(() => s.stop().then(() => {
 				done();
