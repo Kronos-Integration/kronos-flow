@@ -52,6 +52,34 @@ describe('flow', () => {
 		});
 	});
 
+	describe('toJSON', () => {
+		it('toJSONWithOptions', () =>
+			Flow.loadFlows(manager, {
+				myFlow: {
+					type: 'kronos-flow',
+					steps: {
+						slowInbound: {
+							type: 'slow-start',
+							time: 10
+						}
+					}
+				}
+			}).then(() =>
+				assert.deepEqual(manager.flows.myFlow.toJSONWithOptions(), {
+					description: 'General step collection',
+					endpoints: {},
+					steps: {
+						slowInbound: {
+							description: 'This step is the base class for step implementations',
+							endpoints: {},
+							type: 'slow-start'
+						}
+					},
+					type: 'kronos-flow'
+				}))
+		);
+	});
+
 	describe('autostart', () => {
 		it('is false', () =>
 			Flow.loadFlows(manager, {
