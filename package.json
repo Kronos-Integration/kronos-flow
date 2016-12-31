@@ -29,7 +29,7 @@
     "istanbul": "0.4.5",
     "jsdoc": "^3.4.3",
     "kronos-message": "^2.1.0",
-    "kronos-service-manager": "^3.5.2",
+    "kronos-service-manager": "^3.5.3",
     "kronos-step-passthrough": "^2.0.15",
     "kronos-test-step": "^3.1.4",
     "mocha": "3.2.0",
@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "kronos-endpoint": "^2.14.6",
-    "kronos-step": "^5.3.7"
+    "kronos-step": "^5.3.8"
   },
   "contributors": [
     {
