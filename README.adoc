@@ -6,4 +6,6 @@ image:https://david-dm.org/darlenya/stream-line-parser/dev-status.svg[devDepende
 include::./doc/index.adoc[]
 
 === License
+
+image:https://badges.greenkeeper.io/Kronos-Integration/kronos-flow.svg[link="https://greenkeeper.io/"]
 BSD-2-Clause
