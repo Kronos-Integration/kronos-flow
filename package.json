@@ -28,7 +28,7 @@
     "cz-conventional-changelog": "2.0.0",
     "istanbul": "0.4.5",
     "jsdoc": "^3.4.3",
-    "kronos-message": "^2.1.1",
+    "kronos-message": "^2.1.2",
     "kronos-service-manager": "^3.5.10",
     "kronos-step-passthrough": "^2.0.15",
     "kronos-test-step": "^3.1.4",
