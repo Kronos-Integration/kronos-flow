@@ -24,7 +24,7 @@
     "node": ">=6.9.1"
   },
   "devDependencies": {
-    "chai": "4.0.0",
+    "chai": "4.0.2",
     "cz-conventional-changelog": "2.0.0",
     "istanbul": "0.4.5",
     "jsdoc": "^3.4.3",
