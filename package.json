@@ -32,7 +32,7 @@
     "kronos-service-manager": "^3.5.10",
     "kronos-step-passthrough": "^2.0.15",
     "kronos-test-step": "^3.1.4",
-    "mocha": "3.5.0",
+    "mocha": "3.5.1",
     "semantic-release": "7.0.2"
   },
   "dependencies": {
