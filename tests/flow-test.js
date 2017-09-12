@@ -1,8 +1,26 @@
-const chai = require('chai'),
-  assert = chai.assert,
-  expect = chai.expect,
-  should = chai.should(),
-  ksm = require('kronos-service-manager'),
+import test from 'ava';
+
+import { Flow } from '../src/flow';
+
+const owner = {
+  emit(name, arg1, arg2) {}, // dummy event emitter
+  endpointIdentifier(e) {
+    return `name:${e.name}`;
+  }
+};
+
+test('null constructor', t => {
+  const step = new Flow(
+    {
+      name: 'myStep2',
+      description: 'my out-step description'
+    },
+    owner
+  );
+});
+
+/*
+const ksm = require('kronos-service-manager'),
   testStep = require('kronos-test-step'),
   Flow = require('../lib/flow'),
   step = require('kronos-step'),
@@ -16,12 +34,6 @@ describe('flow', () => {
     ksm.manager({}, [require('../index')]).then(m => {
       manager = m;
 
-      /**
-			 * A dummy step for flow testing. The step will execute the stop
-			 * and start command after the given amount of time
-			 * @param stepName The name of this step
-			 * @param time The time in millisecond it will last until the promise is fullfilled
-			 */
       manager
         .registerStep(
           Object.assign({}, step.Step, {
@@ -31,12 +43,9 @@ describe('flow', () => {
               props.time = {
                 value: stepConfiguration.time
               };
-              //console.log(`DummyStep: time: ${stepConfiguration.time}`);
             },
 
             _start() {
-              //console.log(`start: ${this.name} ${this.time}`);
-
               return new Promise((fulfill, reject) =>
                 setTimeout(() => fulfill(this), this.time)
               );
@@ -323,3 +332,4 @@ describe('flow', () => {
     });
   });
 });
+*/

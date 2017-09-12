@@ -1,5 +1,9 @@
 import { Step } from 'kronos-step';
 
+/**
+ * This is the flow implementation.
+ * It holds all the steps.
+ */
 export class Flow extends Step {
   static get type() {
     return 'kronos-flow';
@@ -7,6 +11,12 @@ export class Flow extends Step {
 
   static get description() {
     return 'General step collection';
+  }
+
+  constructor(...args) {
+    super(...args);
+
+    Object.definedProperty(this, 'steps', { value: new Map() });
   }
 
   timeoutForTransition(transition) {
@@ -18,29 +28,24 @@ export class Flow extends Step {
     return super.timeoutForTransition(transition);
   }
 
-	async _start() {
-		const ocs = await Promise.all(this.outstandingConnections);
-		const [normalSteps, inboundSteps] = stepsByType(this.steps);
-		await Promise.all(normalSteps.map(s => s.start()));
-		return Promise.all(inboundSteps.map(s => s.start()));
-	},
+  async _start() {
+    const ocs = await Promise.all(this.outstandingConnections);
+    const [normalSteps, inboundSteps] = stepsByType(this.steps);
+    await Promise.all(normalSteps.map(s => s.start()));
+    return Promise.all(inboundSteps.map(s => s.start()));
+  }
 
-	async _stop() {
-		const [normalSteps, inboundSteps] = stepsByType(this.steps);
-		await Promise.all(inboundSteps.map(s => s.stop()));
-		return Promise.all(normalSteps.map(s => s.stop()));
-	},
+  async _stop() {
+    const [normalSteps, inboundSteps] = stepsByType(this.steps);
+    await Promise.all(inboundSteps.map(s => s.stop()));
+    return Promise.all(normalSteps.map(s => s.stop()));
+  }
 
-	_remove() {
-		return Promise.all(mapForEachValue(this.steps, s => s.remove()));
-	},
-
+  _remove() {
+    return Promise.all(Array.from(this.steps).map(s => s.remove()));
+  }
 }
 
-/**
- * This is the flow implementation.
- * It holds all the steps.
- */
 const Flow = {
   /**
 	 * Declares the following properties:
@@ -55,9 +60,6 @@ const Flow = {
     props.autostart = {
       value: stepDefinition.autostart || false
     };
-
-    // All steps
-    const steps = new Map();
 
     //----------------------------------------------
     //-- Create the sub steps
@@ -284,7 +286,6 @@ const Flow = {
     }
   },
 
-
   toJSONWithOptions(options = {}) {
     const json = {
       type: this.type,
@@ -336,29 +337,13 @@ function stepsByType(steps) {
 }
 
 /**
- * Calls function on each map entry and delivers function reults as an iterable.
- * @param {Map} map
- * @param {Function} f
- * @return {Iterator} result of calling f on each map entry
- * @api private
- */
-function mapForEachValue(map, f) {
-  const r = [];
-
-  for (const i of map.values()) {
-    r.push(f(i));
-  }
-  return r;
-}
-
-/**
  * Load a flow json files and created the flows from it.
  * The flows will be registerd at the manager
  * @param manager {object} The kronos-service-manager
  * @param jsonFlowDefinition {object} The flow definition
  * @return promise
  */
-function loadFlows(manager, jsonFlowDefinition) {
+export function loadFlows(manager, jsonFlowDefinition) {
   if (!manager) {
     throw new Error('The manager is mandatory');
   }
@@ -381,6 +366,3 @@ function loadFlows(manager, jsonFlowDefinition) {
 
   return Promise.all(promises);
 }
-
-module.exports.FlowFactory = Object.assign({}, BaseStep, Flow);
-module.exports.loadFlows = loadFlows;
