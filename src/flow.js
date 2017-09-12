@@ -13,10 +13,41 @@ export class Flow extends Step {
     return 'General step collection';
   }
 
-  constructor(...args) {
-    super(...args);
+  /**
+	 * Declares the following properties:
+	 * steps
+	 * autostart
+	 * @param manager {object} The kronos-service-manager
+	 * @param name {string} The name of this step
+	 * @param stepDefinition {object} The definition used to create the step
+	 */
+  constructor(config, owner) {
+    super(config, owner);
 
-    Object.definedProperty(this, 'steps', { value: new Map() });
+    if (config.autostart) {
+      Object.defineProperty(this, 'autostart', { value: true });
+    }
+
+    Object.defineProperty(this, 'outstandingConnections', { value: [] });
+    Object.defineProperty(this, 'steps', { value: new Map() });
+
+    for (const subStepName in config.steps) {
+      const subStepDefinition = config.steps[subStepName];
+      subStepDefinition.name = subStepName;
+
+      const createdStep = manager.createStepInstanceFromConfig(
+        subStepDefinition,
+        manager
+      );
+
+      if (!createdStep) {
+        throw new Error(
+          `The step '${subStepName}' in the flow '${this
+            .name}' could not been ceated.`
+        );
+      }
+      steps.set(subStepName, createdStep);
+    }
   }
 
   timeoutForTransition(transition) {
@@ -44,50 +75,21 @@ export class Flow extends Step {
   _remove() {
     return Promise.all(Array.from(this.steps).map(s => s.remove()));
   }
-}
 
-const Flow = {
-  /**
-	 * Declares the following properties:
-	 * steps
-	 * autostart
-	 * @param manager {object} The kronos-service-manager
-	 * @param name {string} The name of this step
-	 * @param stepDefinition {object} The definition used to create the step
-	 * @param props {object} The properties of the new object
-	 */
-  initialize(manager, name, stepDefinition, props) {
-    props.autostart = {
-      value: stepDefinition.autostart || false
-    };
+  toJSONWithOptions(options = {}) {
+    const json = super.toJSONWithOptions(options);
 
-    //----------------------------------------------
-    //-- Create the sub steps
-    //----------------------------------------------
-    for (const subStepName in stepDefinition.steps) {
-      const subStepDefinition = stepDefinition.steps[subStepName];
-      subStepDefinition.name = subStepName;
-      const createdStep = manager.createStepInstanceFromConfig(
-        subStepDefinition,
-        manager
-      );
-      if (!createdStep) {
-        throw new Error(
-          `The step '${subStepName}' in the flow '${this
-            .name}' could not been ceated.`
-        );
-      }
-      steps.set(subStepName, createdStep);
+    json.steps = {};
+    for (const subStep of this.steps.values()) {
+      json.steps[subStep.name] = subStep.toJSONWithOptions(options);
     }
 
-    props.steps = {
-      value: steps
-    };
+    return json;
+  }
+}
 
-    props.outstandingConnections = {
-      value: []
-    };
-  },
+const XFlow = {
+  initialize(manager, name, stepDefinition, props) {},
 
   /**
 	 * The flow has no real endpoints. It only has proxies.
@@ -296,25 +298,12 @@ const Flow = {
       json.name = this.name;
     }
 
-    if (options.includeRuntimeInfo) {
-      json.state = this.state;
-    }
-
     for (const endpointName in this.endpoints) {
       const currentEndpoint = this.endpoints[endpointName];
       if (!currentEndpoint.default || options.includeDefaults) {
         //json.endpoints[endpointName] = `${currentEndpoint.step.name/${currentEndpoint.name}`;
       }
     }
-
-    // if (options.includeDefaults) {
-    ATTRIBUTES.forEach(a => (json[a] = this[a]));
-
-    json.steps = {};
-    for (const subStep of this.steps.values()) {
-      json.steps[subStep.name] = subStep.toJSONWithOptions(options);
-    }
-
     return json;
   }
 };
@@ -365,4 +354,8 @@ export function loadFlows(manager, jsonFlowDefinition) {
   }
 
   return Promise.all(promises);
+}
+
+export function registerWithManager(manager) {
+  return manager.registerStep(Flow);
 }

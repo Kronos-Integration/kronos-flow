@@ -10,13 +10,15 @@ const owner = {
 };
 
 test('null constructor', t => {
-  const step = new Flow(
+  const flow = new Flow(
     {
       name: 'myStep2',
       description: 'my out-step description'
     },
     owner
   );
+
+  t.is(flow.name, 'myStep2');
 });
 
 /*
