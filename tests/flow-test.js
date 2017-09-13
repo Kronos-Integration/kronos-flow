@@ -3,6 +3,12 @@ import test from 'ava';
 import { Flow } from '../src/flow';
 import { Step } from 'kronos-step';
 
+class MyStep extends Step {
+  get type() {
+    return 'mystep';
+  }
+}
+
 const owner = {
   emit(name, arg1, arg2) {}, // dummy event emitter
   endpointIdentifier(e) {
@@ -11,6 +17,10 @@ const owner = {
 
   createStepInstanceFromConfig(config, owner) {
     console.log(`instance: ${config}`);
+
+    if (config.type === 'mystep') {
+      return new MyStep(config, owner);
+    }
 
     return new Step(config, owner);
   }
@@ -25,6 +35,9 @@ test('null constructor', t => {
       steps: {
         step1: {
           type: 'mystep'
+        },
+        step2: {
+          type: 'mystep'
         }
       }
     },
@@ -32,13 +45,13 @@ test('null constructor', t => {
   );
 
   t.is(flow.name, 'myStep2');
+  t.is(flow.steps.get('step1').name, 'step1');
+  t.is(flow.steps.get('step2').name, 'step2');
 });
 
 /*
 const ksm = require('kronos-service-manager'),
   testStep = require('kronos-test-step'),
-  Flow = require('../lib/flow'),
-  step = require('kronos-step'),
   service = require('kronos-service'),
   endpoint = require('kronos-endpoint');
 
