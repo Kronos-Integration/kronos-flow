@@ -4,8 +4,33 @@ import { Flow } from '../src/flow';
 import { Step } from 'kronos-step';
 
 class MyStep extends Step {
-  get type() {
-    return 'mystep';
+  static get name() {
+    return 'slow-start';
+  }
+
+  constructor(config, owner) {
+    super(config, owner);
+    this.time = config.time || 0;
+  }
+
+  toJSONWithOptions(options = {}) {
+    const json = super.toJSONWithOptions(options);
+
+    json.time = this.time;
+
+    return json;
+  }
+
+  _start() {
+    return new Promise((fulfill, reject) =>
+      setTimeout(() => fulfill(this), this.time)
+    );
+  }
+
+  _stop() {
+    return new Promise((fulfill, reject) =>
+      setTimeout(() => fulfill(this), this.time)
+    );
   }
 }
 
@@ -16,9 +41,9 @@ const owner = {
   },
 
   createStepInstanceFromConfig(config, owner) {
-    console.log(`instance: ${config}`);
+    //console.log(`instance: ${config}`);
 
-    if (config.type === 'mystep') {
+    if (config.type === 'slow-start') {
       return new MyStep(config, owner);
     }
 
@@ -26,15 +51,16 @@ const owner = {
   }
 };
 
-test('null constructor', t => {
-  const flow = new Flow(
+function makeFlow(owner) {
+  return new Flow(
     {
-      name: 'myStep2',
+      name: 'myFlow1',
       description: 'my out-step description',
 
       steps: {
         step1: {
-          type: 'mystep'
+          type: 'slow-start',
+          time: 10
         },
         step2: {
           type: 'mystep'
@@ -43,82 +69,40 @@ test('null constructor', t => {
     },
     owner
   );
+}
 
-  t.is(flow.name, 'myStep2');
+test('flow constructor', t => {
+  const flow = makeFlow(owner);
+  t.is(flow.name, 'myFlow1');
   t.is(flow.steps.get('step1').name, 'step1');
+  t.is(flow.steps.get('step1').time, 10);
   t.is(flow.steps.get('step2').name, 'step2');
 });
 
+test('flow json', t => {
+  const flow = makeFlow(owner);
+  const json = flow.toJSONWithOptions();
+  t.deepEqual(json, {
+    //name: 'myFlow1',
+    type: 'kronos-flow',
+    //description: 'my out-step description',
+    endpoints: {},
+
+    steps: {
+      step1: {
+        type: 'slow-start',
+        endpoints: {},
+        time: 10
+      },
+      step2: {
+        type: 'kronos-step',
+        endpoints: {}
+      }
+    }
+  });
+});
+
 /*
-const ksm = require('kronos-service-manager'),
-  testStep = require('kronos-test-step'),
-  service = require('kronos-service'),
-  endpoint = require('kronos-endpoint');
-
-describe('flow', () => {
-  let manager;
-
-  before('prepare manager', done => {
-    ksm.manager({}, [require('../index')]).then(m => {
-      manager = m;
-
-      manager
-        .registerStep(
-          Object.assign({}, step.Step, {
-            name: 'slow-start',
-
-            initialize(manager, name, stepConfiguration, props) {
-              props.time = {
-                value: stepConfiguration.time
-              };
-            },
-
-            _start() {
-              return new Promise((fulfill, reject) =>
-                setTimeout(() => fulfill(this), this.time)
-              );
-            },
-
-            _stop() {
-              return new Promise((fulfill, reject) =>
-                setTimeout(() => fulfill(this), this.time)
-              );
-            }
-          })
-        )
-        .then(() => done());
-    });
-  });
-
-  describe('toJSON', () => {
-    it('toJSONWithOptions', () =>
-      Flow.loadFlows(manager, {
-        myFlow: {
-          type: 'kronos-flow',
-          steps: {
-            slowInbound: {
-              type: 'slow-start',
-              time: 10
-            }
-          }
-        }
-      }).then(() =>
-        assert.deepEqual(manager.flows.myFlow.toJSONWithOptions(), {
-          description: 'General step collection',
-          endpoints: {},
-          steps: {
-            slowInbound: {
-              description:
-                'This step is the base class for step implementations',
-              endpoints: {},
-              type: 'slow-start'
-            }
-          },
-          type: 'kronos-flow'
-        })
-      ));
-  });
-
   describe('autostart', () => {
     it('is false', () =>
       Flow.loadFlows(manager, {

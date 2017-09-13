@@ -5,7 +5,7 @@ import { Step } from 'kronos-step';
  * It holds all the steps.
  */
 export class Flow extends Step {
-  static get type() {
+  static get name() {
     return 'kronos-flow';
   }
 
@@ -89,8 +89,6 @@ export class Flow extends Step {
 }
 
 const XFlow = {
-  initialize(manager, name, stepDefinition, props) {},
-
   /**
 	 * The flow has no real endpoints. It only has proxies.
 	 * So just return the configuration
@@ -286,25 +284,6 @@ const XFlow = {
         }
       }
     }
-  },
-
-  toJSONWithOptions(options = {}) {
-    const json = {
-      type: this.type,
-      endpoints: {}
-    };
-
-    if (options.includeName) {
-      json.name = this.name;
-    }
-
-    for (const endpointName in this.endpoints) {
-      const currentEndpoint = this.endpoints[endpointName];
-      if (!currentEndpoint.default || options.includeDefaults) {
-        //json.endpoints[endpointName] = `${currentEndpoint.step.name/${currentEndpoint.name}`;
-      }
-    }
-    return json;
   }
 };
 
