@@ -6,5 +6,6 @@ export default {
     file: pkg.main,
     format: 'cjs'
   },
-  plugins: []
+  plugins: [],
+  external: ['kronos-step']
 };

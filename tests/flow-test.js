@@ -1,11 +1,18 @@
 import test from 'ava';
 
 import { Flow } from '../src/flow';
+import { Step } from 'kronos-step';
 
 const owner = {
   emit(name, arg1, arg2) {}, // dummy event emitter
   endpointIdentifier(e) {
     return `name:${e.name}`;
+  },
+
+  createStepInstanceFromConfig(config, owner) {
+    console.log(`instance: ${config}`);
+
+    return new Step(config, owner);
   }
 };
 
@@ -13,7 +20,13 @@ test('null constructor', t => {
   const flow = new Flow(
     {
       name: 'myStep2',
-      description: 'my out-step description'
+      description: 'my out-step description',
+
+      steps: {
+        step1: {
+          type: 'mystep'
+        }
+      }
     },
     owner
   );

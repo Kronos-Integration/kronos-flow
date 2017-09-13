@@ -35,9 +35,9 @@ export class Flow extends Step {
       const subStepDefinition = config.steps[subStepName];
       subStepDefinition.name = subStepName;
 
-      const createdStep = manager.createStepInstanceFromConfig(
+      const createdStep = owner.createStepInstanceFromConfig(
         subStepDefinition,
-        manager
+        this
       );
 
       if (!createdStep) {
@@ -46,7 +46,7 @@ export class Flow extends Step {
             .name}' could not been ceated.`
         );
       }
-      steps.set(subStepName, createdStep);
+      this.steps.set(subStepName, createdStep);
     }
   }
 

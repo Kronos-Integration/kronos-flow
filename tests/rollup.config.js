@@ -5,6 +5,6 @@ export default {
     format: 'cjs',
     sourcemap: true
   },
-  external: ['ava'],
+  external: ['ava', 'kronos-step'],
   plugins: []
 };
