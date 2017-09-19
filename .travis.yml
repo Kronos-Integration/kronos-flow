@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - 6.9.1
+  - 8.5.0
 sudo: false
 branches:
   only:
@@ -18,9 +18,12 @@ before_install:
 before_script:
   - npm prune
   - npm install -g codecov
+  - npm install coveralls
 script:
-  - npm run-script cover
+  - npm run cover
 after_script:
   - codecov
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  - npm run docs
 after_success:
   - npm run semantic-release
