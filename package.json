@@ -33,7 +33,7 @@
     "kronos-step-passthrough": "^2.0.15",
     "kronos-test-step": "^3.1.4",
     "mocha": "^3.5.3",
-    "semantic-release": "^8.0.0"
+    "semantic-release": "^8.0.3"
   },
   "dependencies": {
     "kronos-endpoint": "^2.14.10",
