@@ -40,7 +40,7 @@ export class Flow extends Step {
         this
       );
 
-      if (!createdStep) {
+      if (createdStep === undefined) {
         throw new Error(
           `The step '${subStepName}' in the flow '${this
             .name}' could not been ceated.`

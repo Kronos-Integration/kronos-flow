@@ -1,6 +1,6 @@
 import test from 'ava';
 
-import { Flow } from '../src/flow';
+import { Flow, loadFlows } from '../src/flow';
 import { Step } from 'kronos-step';
 
 class MyStep extends Step {
@@ -40,6 +40,8 @@ const owner = {
     return `name:${e.name}`;
   },
 
+  registerFlow() {},
+  registerStep() {},
   createStepInstanceFromConfig(config, owner) {
     //console.log(`instance: ${config}`);
 
@@ -102,24 +104,25 @@ test('flow json', t => {
   });
 });
 
-/*
-  describe('autostart', () => {
-    it('is false', () =>
-      Flow.loadFlows(manager, {
-        myFlow: {
-          type: 'kronos-flow',
-          steps: {
-            slowInbound: {
-              type: 'slow-start',
-              time: 10
-            }
-          }
+test('flow autostart', async t => {
+  await loadFlows(owner, {
+    myFlow: {
+      type: 'kronos-flow',
+      steps: {
+        slowInbound: {
+          type: 'slow-start',
+          time: 10
         }
-      }).then(() => {
-        const f = manager.flows.myFlow;
-        assert.equal(f.name, 'myFlow');
-        assert.equal(f.autostart, false);
-      }));
+      }
+    }
+  });
+
+  const f = owner.flows.myFlow;
+  t.is(f.name, 'myFlow');
+  t.is(f.autostart, false);
+});
+
+/*
 
     it('is true', () =>
       Flow.loadFlows(manager, {
