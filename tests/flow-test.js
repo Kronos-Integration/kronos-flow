@@ -1,7 +1,14 @@
 import test from 'ava';
 
-import { Flow, loadFlows } from '../src/flow';
+import { Flow } from '../src/flow';
+import { FlowRegistryMixin } from '../src/flow-registry-mixin';
 import { Step } from 'kronos-step';
+
+const owner = new (FlowRegistryMixin(
+  class Base {
+    emit(name, arg1, arg2) {} // dummy event emitter
+  }
+))();
 
 class MyStep extends Step {
   static get name() {
@@ -34,8 +41,10 @@ class MyStep extends Step {
   }
 }
 
+owner.registerStep(MyStep);
+
+/*
 const owner = {
-  emit(name, arg1, arg2) {}, // dummy event emitter
   endpointIdentifier(e) {
     return `name:${e.name}`;
   },
@@ -52,6 +61,8 @@ const owner = {
     return new Step(config, owner);
   }
 };
+
+*/
 
 function makeFlow(owner) {
   return new Flow(
