@@ -43,27 +43,6 @@ class MyStep extends Step {
 
 owner.registerStep(MyStep);
 
-/*
-const owner = {
-  endpointIdentifier(e) {
-    return `name:${e.name}`;
-  },
-
-  registerFlow() {},
-  registerStep() {},
-  createStepInstanceFromConfig(config, owner) {
-    //console.log(`instance: ${config}`);
-
-    if (config.type === 'slow-start') {
-      return new MyStep(config, owner);
-    }
-
-    return new Step(config, owner);
-  }
-};
-
-*/
-
 function makeFlow(owner) {
   return new Flow(
     {
@@ -74,9 +53,6 @@ function makeFlow(owner) {
         step1: {
           type: 'slow-start',
           time: 10
-        },
-        step2: {
-          type: 'mystep'
         }
       }
     },
@@ -89,7 +65,6 @@ test('flow constructor', t => {
   t.is(flow.name, 'myFlow1');
   t.is(flow.steps.get('step1').name, 'step1');
   t.is(flow.steps.get('step1').time, 10);
-  t.is(flow.steps.get('step2').name, 'step2');
 });
 
 test('flow json', t => {
@@ -106,18 +81,15 @@ test('flow json', t => {
         type: 'slow-start',
         endpoints: {},
         time: 10
-      },
-      step2: {
-        type: 'kronos-step',
-        endpoints: {}
       }
     }
   });
 });
 
-test('flow autostart', async t => {
-  await loadFlows(owner, {
-    myFlow: {
+test('flow autostart false', async t => {
+  const f = new Flow(
+    {
+      name: 'myFlow',
       type: 'kronos-flow',
       steps: {
         slowInbound: {
@@ -125,34 +97,35 @@ test('flow autostart', async t => {
           time: 10
         }
       }
-    }
-  });
+    },
+    owner
+  );
 
-  const f = owner.flows.myFlow;
   t.is(f.name, 'myFlow');
   t.is(f.autostart, false);
 });
 
-/*
-
-    it('is true', () =>
-      Flow.loadFlows(manager, {
-        myAutoStartFlow: {
-          type: 'kronos-flow',
-          autostart: true,
-          steps: {
-            slowInbound: {
-              type: 'slow-start',
-              time: 10
-            }
-          }
+test('flow autostart true', async t => {
+  const f = new Flow(
+    {
+      name: 'myFlow',
+      type: 'kronos-flow',
+      autostart: true,
+      steps: {
+        slowInbound: {
+          type: 'slow-start',
+          time: 10
         }
-      }).then(() => {
-        const f = manager.flows.myAutoStartFlow;
-        assert.equal(f.name, 'myAutoStartFlow');
-        assert.equal(f.autostart, true);
-      }));
-  });
+      }
+    },
+    owner
+  );
+
+  t.is(f.name, 'myFlow');
+  t.is(f.autostart, true);
+});
+
+/*
 
   describe('connections', () => {
     describe('service', () => {
