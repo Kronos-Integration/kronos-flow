@@ -64,6 +64,7 @@ test('flow constructor', t => {
   const flow = makeFlow(owner);
   t.is(flow.name, 'myFlow1');
   t.is(flow.steps.get('step1').name, 'step1');
+  t.is(flow.steps.get('step1').type, 'slow-start');
   t.is(flow.steps.get('step1').time, 10);
 });
 
