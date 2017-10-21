@@ -29,20 +29,20 @@
     "node": ">=8.7.0"
   },
   "devDependencies": {
+    "ava": "0.22.0",
+    "jsdoc-babel": "^0.3.0",
+    "jsdoc-to-markdown": "^3.0.0",
     "kronos-service-manager": "^3.5.10",
     "kronos-step-passthrough": "^2.0.15",
     "kronos-test-step": "^3.1.4",
-    "semantic-release": "^8.1.2",
-    "jsdoc-to-markdown": "^3.0.0",
-    "jsdoc-babel": "^0.3.0",
     "markdown-doctest": "^0.9.1",
     "nyc": "^11.2.1",
-    "ava": "^0.22.0",
     "rollup": "^0.50.0",
+    "semantic-release": "^8.2.1",
     "xo": "^0.19.0"
   },
   "dependencies": {
-    "kronos-endpoint": "^2.14.1",
+    "kronos-endpoint": "^2.14.11",
     "kronos-step": "^5.4.0"
   },
   "contributors": [
