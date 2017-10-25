@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/Kronos-Integration/kronos-flow#readme",
   "engines": {
-    "node": ">=8.6.0"
+    "node": ">=8.7.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
@@ -33,7 +33,7 @@
     "kronos-step-passthrough": "^2.0.15",
     "kronos-test-step": "^3.1.4",
     "mocha": "^3.5.3",
-    "semantic-release": "^8.2.0"
+    "semantic-release": "^8.2.2"
   },
   "dependencies": {
     "kronos-endpoint": "^2.14.10",
