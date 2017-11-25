@@ -16,6 +16,7 @@
     "posttest": "npm run prepare && markdown-doctest",
     "prepare": "rollup -c",
     "docs": "jsdoc2md --configure doc/jsdoc.json -l off -t doc/README.hbs -f src/*.js >README.md"
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
@@ -26,7 +27,7 @@
   },
   "homepage": "https://github.com/Kronos-Integration/kronos-flow#readme",
   "engines": {
-    "node": ">=8.7.0"
+    "node": ">=8.9.1"
   },
   "devDependencies": {
     "ava": "^0.23.0",
