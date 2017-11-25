@@ -14,6 +14,8 @@
 install
 =======
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Kronos-Integration/kronos-flow.svg)](https://greenkeeper.io/)
+
 With [npm](http://npmjs.org) do:
 
 ```shell
