@@ -5,5 +5,5 @@ export default {
     format: 'cjs',
     sourcemap: true
   },
-  external: ['ava', 'kronos-step']
+  external: ['ava', 'kronos-step', 'registry-mixin']
 };

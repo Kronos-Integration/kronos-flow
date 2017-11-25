@@ -6,5 +6,5 @@ export default {
     file: pkg.main,
     format: 'cjs'
   },
-  external: ['kronos-step']
+  external: ['kronos-step', 'registry-mixin']
 };
