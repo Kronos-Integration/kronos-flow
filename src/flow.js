@@ -28,21 +28,17 @@ export class Flow extends Step {
   constructor(config, owner) {
     super(config, owner);
 
-    if (config.autostart) {
-      Object.defineProperty(this, 'autostart', { value: true });
-    }
-
-    Object.defineProperty(this, 'outstandingConnections', { value: [] });
-    Object.defineProperty(this, 'steps', { value: new Map() });
+    Object.defineProperties(this, {
+      autostart: { value: config.autostart ? true : false },
+      outstandingConnections: { value: [] },
+      steps: { value: new Map() }
+    });
 
     for (const subStepName in config.steps) {
       const subStepDefinition = config.steps[subStepName];
       subStepDefinition.name = subStepName;
 
-      const createdStep = owner.createStepInstanceFromConfig(
-        subStepDefinition,
-        this
-      );
+      const createdStep = owner.declareStep(subStepDefinition, this);
 
       if (createdStep === undefined) {
         throw new Error(
