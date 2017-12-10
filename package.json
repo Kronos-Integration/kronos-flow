@@ -32,7 +32,6 @@
     "ava": "^0.24.0",
     "jsdoc-babel": "^0.3.0",
     "jsdoc-to-markdown": "^3.0.2",
-    "kronos-service-manager": "^3.5.10",
     "kronos-step-passthrough": "^2.0.15",
     "kronos-test-step": "^3.1.4",
     "markdown-doctest": "^0.9.1",
