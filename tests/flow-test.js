@@ -1,10 +1,10 @@
 import test from 'ava';
 
 import { Flow } from '../src/flow';
-import { FlowRegistryMixin } from '../src/flow-registry-mixin';
+import { FlowProviderMixin } from '../src/flow-provider-mixin';
 import { Step } from 'kronos-step';
 
-const owner = new (FlowRegistryMixin(
+const owner = new (FlowProviderMixin(
   class Base {
     emit(name, arg1, arg2) {} // dummy event emitter
   }

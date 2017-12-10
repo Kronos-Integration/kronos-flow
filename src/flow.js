@@ -1,5 +1,8 @@
 import { Step } from 'kronos-step';
 import { stepsByType } from './util';
+import { FlowProviderMixin } from './flow-provider-mixin';
+
+export { FlowProviderMixin };
 
 /**
  * This is the flow implementation.
@@ -15,13 +18,13 @@ export class Flow extends Step {
   }
 
   /**
-	 * Declares the following properties:
-	 * steps
-	 * autostart
-	 * @param manager {object} The kronos-service-manager
-	 * @param name {string} The name of this step
-	 * @param stepDefinition {object} The definition used to create the step
-	 */
+   * Declares the following properties:
+   * steps
+   * autostart
+   * @param manager {object} The kronos-service-manager
+   * @param name {string} The name of this step
+   * @param stepDefinition {object} The definition used to create the step
+   */
   constructor(config, owner) {
     super(config, owner);
 
@@ -43,8 +46,9 @@ export class Flow extends Step {
 
       if (createdStep === undefined) {
         throw new Error(
-          `The step '${subStepName}' in the flow '${this
-            .name}' could not been ceated.`
+          `The step '${subStepName}' in the flow '${
+            this.name
+          }' could not been ceated.`
         );
       }
       this.steps.set(subStepName, createdStep);
@@ -91,10 +95,10 @@ export class Flow extends Step {
 
 const XFlow = {
   /**
-	 * The flow has no real endpoints. It only has proxies.
-	 * So just return the configuration
-	 * @param {Object} stepDefinition The step configuration
-	 */
+   * The flow has no real endpoints. It only has proxies.
+   * So just return the configuration
+   * @param {Object} stepDefinition The step configuration
+   */
   createEndpoints(stepDefinition) {
     if (stepDefinition) {
       if (stepDefinition.endpoints) {
@@ -108,12 +112,12 @@ const XFlow = {
   },
 
   /**
-	 * Find endpoint for given expression
-	 * @param {string} expression
-	 * @param {boolean} wait for endpoint to become present (deliver a promise)
-	 * @param {array[string]} problems
-	 * @return {Endpoint} found endpoint
-	 */
+   * Find endpoint for given expression
+   * @param {string} expression
+   * @param {boolean} wait for endpoint to become present (deliver a promise)
+   * @param {array[string]} problems
+   * @return {Endpoint} found endpoint
+   */
   endpointFor(expression, wait, problems) {
     const res = expression.match(/^(.+):(.+)/); // service:endpoint
 
@@ -162,8 +166,8 @@ const XFlow = {
   },
 
   /**
-	 * set the target endpoints
-	 */
+   * set the target endpoints
+   */
   connectEndpoints(stepDefinition) {
     for (const subStepName in stepDefinition.steps) {
       const subStepDefinition = stepDefinition.steps[subStepName];
@@ -232,10 +236,10 @@ const XFlow = {
   },
 
   /**
-	 * A flow has only endpoint proxies. These will be replaced by the original endpoints
-	 * of the sub steps
-	 * get the original endpoints for the Flow.
-	 */
+   * A flow has only endpoint proxies. These will be replaced by the original endpoints
+   * of the sub steps
+   * get the original endpoints for the Flow.
+   */
   connectRootEndpoints() {
     const endpoints = this.endpoints;
     const name = this.name;
