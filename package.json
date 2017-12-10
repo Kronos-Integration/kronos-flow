@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "kronos-endpoint": "^2.14.11",
-    "kronos-step": "^5.4.0"
+    "kronos-step": "^5.5.2"
   },
   "contributors": [
     {
