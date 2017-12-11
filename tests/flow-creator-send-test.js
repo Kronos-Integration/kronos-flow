@@ -1,50 +1,15 @@
-const chai = require('chai'),
-  assert = chai.assert,
-  expect = chai.expect,
-  should = chai.should(),
-  fs = require('fs'),
+import test from 'ava';
+import { Flow, registerWithManager } from '../src/flow';
+import { FlowProviderMixin } from '../src/flow-provider-mixin';
+
+const fs = require('fs'),
+  { promisify } = require('util'),
   path = require('path'),
-  ksm = require('kronos-service-manager'),
-  testStep = require('kronos-test-step'),
   step = require('kronos-step'),
-  endpoint = require('kronos-endpoint'),
-  stepPassThrough = require('kronos-step-passthrough'),
-  messageFactory = require('kronos-message').createMessage,
-  Flow = require('../index.js');
+  stepPassThrough = require('kronos-step-passthrough');
 
-const fixturesDir = path.join(__dirname, 'fixtures');
-
-// ---------------------------
-// Create a mock manager
-// ---------------------------
-const managerPromise = ksm.manager().then(manager =>
-  Promise.all([
-    Flow.registerWithManager(manager),
-
-    // register the passthroughStep
-    stepPassThrough.registerWithManager(manager)
-  ]).then(() => Promise.resolve(manager))
-);
-
-// ---------------------------
-// load example flow
-// ---------------------------
-
-describe('flow: send message', () => {
-  // it('flow_one_step.json', function () {
-  // 	return flowTest('flow_one_step.json', 'flowOne');
-  // });
-  //
-  // it('flow_two_steps.json', function () {
-  // 	return flowTest('flow_two_steps.json', 'flowTwoSteps');
-  // });
-
-  it('flow_nested_level1.json', () =>
-    flowTest('flow_nested_level1.json', 'nestedLevel1'));
-
-  // it('flow_nested_complex.json', function () {
-  // 	return flowTest('flow_nested_complex.json', 'nestedComplex');
-  // });
+test('flow load', async t => {
+  await flowTest(t, 'flow_nested_level1.json');
 });
 
 /**
@@ -56,16 +21,32 @@ describe('flow: send message', () => {
  * @param done The done callback.
  * @return promise
  */
-function flowTest(flowFileName, flowName) {
-  return managerPromise.then(manager => {
-    // load the json file
-    const flowDefintion = require(path.join(fixturesDir, flowFileName));
 
-    // load the content of the flow definition
-    return Flow.loadFlows(manager, flowDefintion).then(() => {
-      // get the flow from the manager
-      const myFlow = manager.flows[flowName];
+async function flowTest(t, flowFileName) {
+  const owner = new (FlowProviderMixin(
+    class Base {
+      emit(name, arg1, arg2) {}
+    }
+  ))();
 
+  await registerWithManager(owner);
+
+  const readFile = promisify(fs.readFile);
+
+  const flowDefintion = JSON.parse(
+    await readFile(
+      path.join(__dirname, '..', 'tests', 'fixtures', flowFileName),
+      'UTF8'
+    )
+  );
+
+  console.log(flowDefintion);
+  const step = owner.declareStep(flowDefintion, owner);
+
+  t.is(step.name, 'aaa');
+}
+
+/*
       const msgToSend = messageFactory({
         file_name: 'anyFile.txt'
       });
@@ -104,3 +85,4 @@ function flowTest(flowFileName, flowName) {
     });
   });
 }
+*/
