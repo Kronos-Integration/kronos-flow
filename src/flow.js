@@ -1,5 +1,5 @@
 import { Step } from 'kronos-step';
-import { stepsByType } from './util';
+import { stepsByStartupOrder } from './util';
 import { FlowProviderMixin } from './flow-provider-mixin';
 
 export { FlowProviderMixin };
@@ -62,15 +62,16 @@ export class Flow extends Step {
 
   async _start() {
     const ocs = await Promise.all(this.outstandingConnections);
-    const [normalSteps, inboundSteps] = stepsByType(this.steps);
-    await Promise.all(normalSteps.map(s => s.start()));
-    return Promise.all(inboundSteps.map(s => s.start()));
+
+    for (const step of stepsByStartupOrder(this.steps)) {
+      await step.start();
+    }
   }
 
   async _stop() {
-    const [normalSteps, inboundSteps] = stepsByType(this.steps);
-    await Promise.all(inboundSteps.map(s => s.stop()));
-    return Promise.all(normalSteps.map(s => s.stop()));
+    for (const step of stepsByStartupOrder(this.steps, true)) {
+      await step.stop();
+    }
   }
 
   _remove() {

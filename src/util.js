@@ -1,16 +1,10 @@
-export function stepsByType(steps) {
-  // The inbound steps will be stopped first
-  const normalSteps = [];
-  const inboundSteps = [];
+export function stepsByStartupOrder(steps, inverse = false) {
+  const comparator = (a, b) =>
+    a.startupOrder > b.startupOrder
+      ? 1
+      : a.startupOrder < b.startupOrder ? -1 : 0;
 
-  // Sort the steps
-  for (const subStep of steps.values()) {
-    if (subStep.inbound) {
-      inboundSteps.push(subStep);
-    } else {
-      normalSteps.push(subStep);
-    }
-  }
-
-  return [normalSteps, inboundSteps];
+  return steps
+    .values()
+    .sort((a, b) => (inverse ? comparator(b, a) : comparator(a, b)));
 }
