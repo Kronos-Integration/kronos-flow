@@ -22,13 +22,16 @@ test('flow load', async t => {
  * @return promise
  */
 
-async function flowTest(t, flowFileName) {
-  const owner = new (FlowProviderMixin(
-    class Base {
-      emit(name, arg1, arg2) {}
-    }
-  ))();
+class FlowProvider extends FlowProviderMixin(
+  class Base {
+    emit(name, arg1, arg2) {}
+  }
+) {}
 
+async function flowTest(t, flowFileName) {
+  const owner = new FlowProvider();
+
+  await stepPassThrough.registerWithManager(owner);
   await registerWithManager(owner);
 
   const readFile = promisify(fs.readFile);
@@ -47,14 +50,6 @@ async function flowTest(t, flowFileName) {
 }
 
 /*
-      const msgToSend = messageFactory({
-        file_name: 'anyFile.txt'
-      });
-
-      msgToSend.payload = {
-        name: 'pay load'
-      };
-
       let inEndPoint = myFlow.endpoints.inFile;
       let outEndPoint = myFlow.endpoints.outFile;
 
