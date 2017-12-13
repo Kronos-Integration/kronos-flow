@@ -8,8 +8,8 @@ const fs = require('fs'),
   step = require('kronos-step'),
   stepPassThrough = require('kronos-step-passthrough');
 
-test('flow load', async t => {
-  await flowTest(t, 'flow_nested_level1.json');
+test.only('flow load', async t => {
+  await flowTest(t, 'flow_one_step.json');
 });
 
 /**
@@ -24,7 +24,7 @@ test('flow load', async t => {
 
 class FlowProvider extends FlowProviderMixin(
   class Base {
-    emit(name, arg1, arg2) {}
+    emit() {}
   }
 ) {}
 
@@ -43,10 +43,9 @@ async function flowTest(t, flowFileName) {
     )
   );
 
-  console.log(flowDefintion);
   const step = owner.declareStep(flowDefintion, owner);
 
-  t.is(step.name, 'aaa');
+  t.is(step.name, 'flowOne');
 }
 
 /*

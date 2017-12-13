@@ -6,7 +6,7 @@ import { Step } from 'kronos-step';
 
 const owner = new (FlowProviderMixin(
   class Base {
-    emit(name, arg1, arg2) {} // dummy event emitter
+    emit() {} // dummy event emitter
   }
 ))();
 
