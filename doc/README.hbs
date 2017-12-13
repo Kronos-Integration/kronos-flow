@@ -16,3 +16,27 @@
 [![downloads](http://img.shields.io/npm/dm/kronos-flow.svg?style=flat-square)](https://npmjs.org/package/kronos-flow)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
+Flow
+====
+A flow is a bunch of steps and the connection between the steps. So a flow is a directed graph.
+The edges are the connections between the steps. The vertex is the step.
+A flow has inbound and outbound steps and processing steps.
+A flow must fulfill the following requirements:
+
+- It must have a name.
+- It must have a description.
+- It must have at least one inbound step.
+- All the steps must have at least one connection.
+- All steps must be reachable from the inbound steps.
+
+A Flow may also have endpoints which could be connected to the steps. So it is
+possible to bundle steps in a flow. From the outside the flows acts as a single step.
+
+```shell
+npm install kronos-flow
+```
+
+license
+=======
+
+BSD-2-Clause

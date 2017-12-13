@@ -112,7 +112,7 @@ const XFlow = {
    * Find endpoint for given expression
    * @param {string} expression
    * @param {boolean} wait for endpoint to become present (deliver a promise)
-   * @param {array[string]} problems
+   * @param {string} problems
    * @return {Endpoint} found endpoint
    */
   endpointFor(expression, wait, problems) {
