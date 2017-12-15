@@ -1,6 +1,6 @@
 {
   "type": "kronos-flow",
-  "name": "flowOne",
+  "name": "flow-one-step",
   "description": "a simple flow for testing",
   "endpoints": {
     "inFile": "Gumbo_in/in",
