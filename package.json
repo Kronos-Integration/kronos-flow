@@ -36,7 +36,7 @@
     "kronos-step-passthrough": "^2.1.1",
     "kronos-test-step": "^3.1.4",
     "markdown-doctest": "^0.9.1",
-    "nyc": "^11.4.0",
+    "nyc": "^11.4.1",
     "rollup": "^0.52.2",
     "rollup-plugin-multi-entry": "^2.0.2",
     "semantic-release": "^11.0.2",
