@@ -78,7 +78,7 @@ export class Flow extends Step {
     return Promise.all(Array.from(this.steps).map(s => s.remove()));
   }
 
-  toJSONWithOptions(options = {}) {
+  toJSONWithOptions(options) {
     const json = super.toJSONWithOptions(options);
 
     json.steps = {};
