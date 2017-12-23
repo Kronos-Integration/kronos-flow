@@ -88,9 +88,9 @@ export class Flow extends Step {
 
     return json;
   }
-}
 
-const XFlow = {
+  /****/
+
   /**
    * The flow has no real endpoints. It only has proxies.
    * So just return the configuration
@@ -106,7 +106,7 @@ const XFlow = {
       this.connectEndpoints(stepDefinition);
       this.connectRootEndpoints();
     }
-  },
+  }
 
   /**
    * Find endpoint for given expression
@@ -160,7 +160,7 @@ const XFlow = {
     }
 
     return undefined;
-  },
+  }
 
   /**
    * set the target endpoints
@@ -230,7 +230,7 @@ const XFlow = {
         }
       }
     }
-  },
+  }
 
   /**
    * A flow has only endpoint proxies. These will be replaced by the original endpoints
@@ -287,7 +287,7 @@ const XFlow = {
       }
     }
   }
-};
+}
 
 export function registerWithManager(manager) {
   return manager.registerStep(Flow);
