@@ -7,8 +7,18 @@ export { FlowProviderMixin };
 /**
  * This is the flow implementation.
  * It holds all the steps.
+ * Declares the following properties:
+ * -steps
+ * -autostart
+ * @param manager {object} The kronos-service-manager
+ * @param name {string} The name of this step
+ * @param stepDefinition {object} The definition used to create the step
  */
 export class Flow extends Step {
+
+  /**
+   * @return {string} 'kronos-flow'
+   */
   static get name() {
     return 'kronos-flow';
   }
@@ -17,14 +27,6 @@ export class Flow extends Step {
     return 'General step collection';
   }
 
-  /**
-   * Declares the following properties:
-   * steps
-   * autostart
-   * @param manager {object} The kronos-service-manager
-   * @param name {string} The name of this step
-   * @param stepDefinition {object} The definition used to create the step
-   */
   constructor(config, owner) {
     super(config, owner);
 
