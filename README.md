@@ -39,10 +39,11 @@ possible to bundle steps in a flow. From the outside the flows acts as a single 
 ### Table of Contents
 
 -   [Flow](#flow)
--   [createEndpoints](#createendpoints)
--   [endpointFor](#endpointfor)
--   [connectEndpoints](#connectendpoints)
--   [connectRootEndpoints](#connectrootendpoints)
+    -   [createEndpoints](#createendpoints)
+    -   [endpointFor](#endpointfor)
+    -   [connectEndpoints](#connectendpoints)
+    -   [connectRootEndpoints](#connectrootendpoints)
+    -   [name](#name)
 -   [willBeUnregistered](#willbeunregistered)
 
 ## Flow
@@ -51,13 +52,16 @@ possible to bundle steps in a flow. From the outside the flows acts as a single 
 
 This is the flow implementation.
 It holds all the steps.
+Declares the following properties:
+\-steps
+\-autostart
 
 **Parameters**
 
--   `config`  
--   `owner`  
+-   `config`  {Object} The definition used to create the flow
+-   `owner`  {Object} owner of the flow
 
-## createEndpoints
+### createEndpoints
 
 The flow has no real endpoints. It only has proxies.
 So just return the configuration
@@ -66,7 +70,7 @@ So just return the configuration
 
 -   `stepDefinition` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** The step configuration
 
-## endpointFor
+### endpointFor
 
 Find endpoint for given expression
 
@@ -78,7 +82,7 @@ Find endpoint for given expression
 
 Returns **Endpoint** found endpoint
 
-## connectEndpoints
+### connectEndpoints
 
 set the target endpoints
 
@@ -86,11 +90,15 @@ set the target endpoints
 
 -   `stepDefinition`  
 
-## connectRootEndpoints
+### connectRootEndpoints
 
 A flow has only endpoint proxies. These will be replaced by the original endpoints
 of the sub steps
 get the original endpoints for the Flow.
+
+### name
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 'kronos-flow'
 
 ## willBeUnregistered
 

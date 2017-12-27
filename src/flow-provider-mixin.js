@@ -13,7 +13,7 @@ export function FlowProviderMixin(superclass) {
         withEvents: true,
         hasBeenRegistered: async flow => {
           if (flow.autostart) {
-            flow.start();
+            return flow.start();
           }
         },
 
@@ -29,6 +29,18 @@ export function FlowProviderMixin(superclass) {
           return flow.remove();
         }
       });
+    }
+
+    /**
+     * Stops execution and frees all used flows.
+     * It will stop each flow.
+     * @return {Promise} that fullfills when the manager has stopped
+     */
+    async _stop() {
+      await Promise.all(
+        Object.keys(this.flows).map(name => this.flows[name].stop())
+      );
+      return super._stop();
     }
   };
 }

@@ -10,12 +10,10 @@ export { FlowProviderMixin };
  * Declares the following properties:
  * -steps
  * -autostart
- * @param manager {object} The kronos-service-manager
- * @param name {string} The name of this step
- * @param stepDefinition {object} The definition used to create the step
+ * @param config {Object} The definition used to create the flow
+ * @param owner {Object} owner of the flow
  */
 export class Flow extends Step {
-
   /**
    * @return {string} 'kronos-flow'
    */
