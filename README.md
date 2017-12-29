@@ -44,6 +44,7 @@ possible to bundle steps in a flow. From the outside the flows acts as a single 
     -   [connectEndpoints](#connectendpoints)
     -   [connectRootEndpoints](#connectrootendpoints)
     -   [name](#name)
+-   [FlowProviderMixin](#flowprovidermixin)
 -   [willBeUnregistered](#willbeunregistered)
 
 ## Flow
@@ -58,8 +59,8 @@ Declares the following properties:
 
 **Parameters**
 
--   `config`  {Object} The definition used to create the flow
--   `owner`  {Object} owner of the flow
+-   `config` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** the definition used to create the flow
+-   `owner` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** owner of the flow
 
 ### createEndpoints
 
@@ -99,6 +100,17 @@ get the original endpoints for the Flow.
 ### name
 
 Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 'kronos-flow'
+
+## FlowProviderMixin
+
+mixin to create a _Flow_ owner.
+Also incorporates _Step_ and _Interceptor_ ownership
+
+**Parameters**
+
+-   `superclass` **class** 
+
+Returns **class** with flow ownership support
 
 ## willBeUnregistered
 

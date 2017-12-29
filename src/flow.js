@@ -10,8 +10,8 @@ export { FlowProviderMixin };
  * Declares the following properties:
  * -steps
  * -autostart
- * @param config {Object} The definition used to create the flow
- * @param owner {Object} owner of the flow
+ * @param {Object} config the definition used to create the flow
+ * @param {Object} owner owner of the flow
  */
 export class Flow extends Step {
   /**

@@ -2,6 +2,12 @@ import { defineRegistryProperties } from 'registry-mixin';
 import { InterceptorProviderMixin } from 'kronos-service';
 import { StepProviderMixin } from 'kronos-step';
 
+/**
+ * mixin to create a _Flow_ owner.
+ * Also incorporates _Step_ and _Interceptor_ ownership
+ * @param {class} superclass
+ * @return {class} with flow ownership support
+ */
 export function FlowProviderMixin(superclass) {
   return class FlowProviderMixin extends StepProviderMixin(
     InterceptorProviderMixin(superclass)
