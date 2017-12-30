@@ -3,49 +3,16 @@ import test from 'ava';
 import { Flow } from '../src/flow';
 import { FlowProviderMixin } from '../src/flow-provider-mixin';
 import { Step } from 'kronos-step';
+import { FlowProvider, MyStep } from './util';
 
-const owner = new (FlowProviderMixin(
-  class Base {
-    emit() {} // dummy event emitter
-  }
-))();
-
-class MyStep extends Step {
-  static get name() {
-    return 'slow-start';
-  }
-
-  constructor(config, owner) {
-    super(config, owner);
-    this.time = config.time || 0;
-  }
-
-  toJSONWithOptions(options = {}) {
-    const json = super.toJSONWithOptions(options);
-
-    json.time = this.time;
-
-    return json;
-  }
-
-  _start() {
-    return new Promise((fulfill, reject) =>
-      setTimeout(() => fulfill(this), this.time)
-    );
-  }
-
-  _stop() {
-    return new Promise((fulfill, reject) =>
-      setTimeout(() => fulfill(this), this.time)
-    );
-  }
-}
+const owner = new FlowProvider();
 
 owner.registerStep(MyStep);
 
 function makeFlow(owner) {
   return new Flow(
     {
+      autostart: true,
       name: 'myFlow1',
       description: 'my out-step description',
 
@@ -126,59 +93,64 @@ test('flow autostart true', async t => {
   t.is(f.autostart, true);
 });
 
+test('flow step with service endpoint optional', async t => {
+  const f = new Flow(
+    {
+      name: 'myFlow',
+      type: 'kronos-flow',
+      autostart: true,
+      steps: {
+        'with-service': {
+          type: 'slow-start',
+          endpoints: {
+            optional: {
+              in: true,
+              target: 'aService:a1',
+              mandatory: false
+            }
+          }
+        }
+      }
+    },
+    owner
+  );
+
+  const e = f.steps.get('with-service').endpoints.optional;
+  t.is(e.name, 'optional');
+
+  await f.start();
+});
+
+test('flow step with service endpoint mandatory', async t => {
+  const f = new Flow(
+    {
+      name: 'myFlow',
+      type: 'kronos-flow',
+      autostart: true,
+      steps: {
+        'with-service': {
+          type: 'slow-start',
+          endpoints: {
+            mandatory: {
+              out: true,
+              target: 'config:config'
+            }
+          }
+        }
+      }
+    },
+    owner
+  );
+
+  const e = f.steps.get('with-service').endpoints.mandatory;
+  t.is(e.name, 'mandatory');
+
+  await f.start();
+
+  t.is(e.isConnected, true);
+});
+
 /*
-
-  describe('connections', () => {
-    describe('service', () => {
-      describe('optional', () => {
-        it('create', done => {
-          const s = manager.createStepInstanceFromConfig(
-            {
-              name: 'myFlowName',
-              type: 'kronos-flow',
-              steps: {
-                'with-service': {
-                  type: 'slow-start',
-                  endpoints: {
-                    optional: {
-                      in: true,
-                      target: 'aService:a1',
-                      mandatory: false
-                    }
-                  }
-                }
-              }
-            },
-            manager
-          );
-          s.start().then(() => s.stop().then(() => done()));
-        });
-      });
-      describe('mandatory', () => {
-        describe('present', () => {
-          it('create', done => {
-            const s = manager.createStepInstanceFromConfig(
-              {
-                name: 'myFlowName',
-                type: 'kronos-flow',
-                steps: {
-                  'with-service': {
-                    type: 'slow-start',
-                    endpoints: {
-                      mandatory: {
-                        out: true,
-                        target: 'config:config'
-                      }
-                    }
-                  }
-                }
-              },
-              manager
-            );
-            s.start().then(() => s.stop().then(() => done()));
-          });
-        });
-
         describe('missing service', () => {
           it('create', done => {
             class TestService extends service.Service {

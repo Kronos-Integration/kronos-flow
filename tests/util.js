@@ -1,3 +1,5 @@
+import { Step } from 'kronos-step';
+
 import { FlowProviderMixin } from '../src/flow-provider-mixin';
 import { registerWithManager } from '../src/flow';
 
@@ -17,11 +19,42 @@ const fs = require('fs'),
  * @return promise
  */
 
-class FlowProvider extends FlowProviderMixin(
+export class FlowProvider extends FlowProviderMixin(
   class Base {
     emit() {}
   }
 ) {}
+
+export class MyStep extends Step {
+  static get name() {
+    return 'slow-start';
+  }
+
+  constructor(config, owner) {
+    super(config, owner);
+    this.time = config.time || 0;
+  }
+
+  toJSONWithOptions(options = {}) {
+    const json = super.toJSONWithOptions(options);
+
+    json.time = this.time;
+
+    return json;
+  }
+
+  _start() {
+    return new Promise((fulfill, reject) =>
+      setTimeout(() => fulfill(this), this.time)
+    );
+  }
+
+  _stop() {
+    return new Promise((fulfill, reject) =>
+      setTimeout(() => fulfill(this), this.time)
+    );
+  }
+}
 
 export async function flowTest(t, flowFileName) {
   const owner = new FlowProvider();
