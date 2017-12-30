@@ -38,7 +38,7 @@ export class Flow extends Step {
       const subStepDefinition = config.steps[subStepName];
       subStepDefinition.name = subStepName;
 
-      const createdStep = owner.declareStep(subStepDefinition, this);
+      const createdStep = owner.createStep(subStepDefinition, this);
 
       if (createdStep === undefined) {
         throw new Error(
@@ -89,24 +89,28 @@ export class Flow extends Step {
     return json;
   }
 
-  /****/
-
-  /**
-   * The flow has no real endpoints. It only has proxies.
-   * So just return the configuration
-   * @param {Object} stepDefinition The step configuration
-   */
-  createEndpoints(stepDefinition) {
-    if (stepDefinition) {
-      if (stepDefinition.endpoints) {
-        for (const endpointName in stepDefinition.endpoints) {
-          this.endpoints[endpointName] = stepDefinition.endpoints[endpointName];
-        }
-      }
-      this.connectEndpoints(stepDefinition);
-      this.connectRootEndpoints();
-    }
+  _createEndpointFromConfig(name, definition, interceptorFactory) {
+    let r = super.createEndpointFromConfig(
+      name,
+      definition,
+      interceptorFactory
+    );
+    r = this.endpoints[name];
+    console.log(
+      `createEndpointFromConfig: ${name} ${JSON.stringify(definition)} -> ${r}`
+    );
+    return r;
   }
+
+  _endpointFactoryFromConfig(definition) {
+    const r = super.endpointFactoryFromConfig(definition);
+    console.log(
+      `endpointFactoryFromConfig: ${JSON.stringify(definition)} -> ${r.name}`
+    );
+    return r;
+  }
+
+  /****/
 
   /**
    * Find endpoint for given expression

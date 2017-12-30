@@ -119,6 +119,8 @@ test('flow step with service endpoint optional', async t => {
   t.is(e.name, 'optional');
 
   await f.start();
+
+  t.is(e.isConnected, false);
 });
 
 test('flow step with service endpoint mandatory', async t => {
@@ -144,6 +146,7 @@ test('flow step with service endpoint mandatory', async t => {
 
   const e = f.steps.get('with-service').endpoints.mandatory;
   t.is(e.name, 'mandatory');
+  t.is(e.isOut, true);
 
   await f.start();
 

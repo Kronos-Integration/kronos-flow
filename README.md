@@ -39,7 +39,6 @@ possible to bundle steps in a flow. From the outside the flows acts as a single 
 ### Table of Contents
 
 -   [Flow](#flow)
-    -   [createEndpoints](#createendpoints)
     -   [endpointFor](#endpointfor)
     -   [connectEndpoints](#connectendpoints)
     -   [connectRootEndpoints](#connectrootendpoints)
@@ -61,15 +60,6 @@ Declares the following properties:
 
 -   `config` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** the definition used to create the flow
 -   `owner` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** owner of the flow
-
-### createEndpoints
-
-The flow has no real endpoints. It only has proxies.
-So just return the configuration
-
-**Parameters**
-
--   `stepDefinition` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** The step configuration
 
 ### endpointFor
 

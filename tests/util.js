@@ -71,7 +71,7 @@ export async function flowTest(t, flowFileName) {
     )
   );
 
-  const flow = owner.declareStep(flowDefintion, owner);
+  const flow = owner.createStep(flowDefintion, owner);
 
   return flow;
 }
