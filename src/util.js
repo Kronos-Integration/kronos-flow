@@ -4,7 +4,7 @@ export function stepsByStartupOrder(steps, inverse = false) {
       ? 1
       : a.startupOrder < b.startupOrder ? -1 : 0;
 
-  return steps
-    .values()
-    .sort((a, b) => (inverse ? comparator(b, a) : comparator(a, b)));
+  return Array.from(steps.values()).sort(
+    (a, b) => (inverse ? comparator(b, a) : comparator(a, b))
+  );
 }
