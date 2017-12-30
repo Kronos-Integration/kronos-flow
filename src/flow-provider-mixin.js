@@ -40,7 +40,7 @@ export function FlowProviderMixin(superclass) {
     /**
      * Stops execution and frees all used flows.
      * It will stop each flow.
-     * @return {Promise} that fullfills when the manager has stopped
+     * @return {Promise} that fullfills when the flow has stopped
      */
     async _stop() {
       await Promise.all(
