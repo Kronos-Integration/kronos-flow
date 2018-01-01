@@ -1,4 +1,5 @@
 import { Step } from 'kronos-step';
+import { createAttributes, mergeAttributes } from 'model-attributes';
 import { stepsByStartupOrder } from './util';
 import { FlowProviderMixin } from './flow-provider-mixin';
 
@@ -11,6 +12,7 @@ export { FlowProviderMixin };
  * -steps
  * -autostart
  * @param {Object} config the definition used to create the flow
+ * @param {Object} config.steps steps of the flow
  * @param {Object} owner owner of the flow
  */
 export class Flow extends Step {
@@ -25,30 +27,52 @@ export class Flow extends Step {
     return 'General step collection';
   }
 
+  static get configurationAttributes() {
+    return mergeAttributes(
+      createAttributes({
+        steps: {
+          description: 'steps of the flow',
+          type: 'object',
+          needsRestart: true,
+          setter(steps) {
+            console.log(`setSteps: ${this.name} ${Object.keys(steps)}`);
+
+            Object.defineProperty(this, 'steps', { value: new Map() });
+
+            for (const subStepName in steps) {
+              const subStepDefinition = steps[subStepName];
+              subStepDefinition.name = subStepName;
+
+              const createdStep = this.owner.createStep(
+                subStepDefinition,
+                this
+              );
+
+              if (createdStep === undefined) {
+                throw new Error(
+                  `The step '${subStepName}' in the flow '${
+                    this.name
+                  }' could not been ceated.`
+                );
+              }
+              this.steps.set(subStepName, createdStep);
+            }
+
+            return true;
+          }
+        }
+      }),
+      Step.configurationAttributes
+    );
+  }
+
   constructor(config, owner) {
     super(config, owner);
 
     Object.defineProperties(this, {
       autostart: { value: config.autostart ? true : false },
-      outstandingConnections: { value: [] },
-      steps: { value: new Map() }
+      outstandingConnections: { value: [] }
     });
-
-    for (const subStepName in config.steps) {
-      const subStepDefinition = config.steps[subStepName];
-      subStepDefinition.name = subStepName;
-
-      const createdStep = owner.createStep(subStepDefinition, this);
-
-      if (createdStep === undefined) {
-        throw new Error(
-          `The step '${subStepName}' in the flow '${
-            this.name
-          }' could not been ceated.`
-        );
-      }
-      this.steps.set(subStepName, createdStep);
-    }
   }
 
   timeoutForTransition(transition) {
@@ -89,13 +113,34 @@ export class Flow extends Step {
     return json;
   }
 
+  endpointForExpression(expression, wait) {
+    console.log(`endpointForExpression: ${expression}`);
+
+    const [sn, en] = expression.split(/\./);
+    const step = this.steps.get(sn);
+
+    if (step !== undefined) {
+      console.log(
+        `endpintFor ${step.name} ${en} -> ${step.endpointForExpression(en)}`
+      );
+      return step.endpointForExpression(en, wait);
+    }
+
+    return super.endpointForExpression(expression, wait);
+  }
+
   _createEndpointFromConfig(name, definition, interceptorFactory) {
+    if (typeof definition === 'string') {
+      const e = this.endpointForExpression(definition);
+      console.log(`link to present endpoint ${definition} -> ${e}`);
+      return e;
+    }
+
     let r = super.createEndpointFromConfig(
       name,
       definition,
       interceptorFactory
     );
-    r = this.endpoints[name];
     console.log(
       `createEndpointFromConfig: ${name} ${JSON.stringify(definition)} -> ${r}`
     );

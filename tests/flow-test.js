@@ -105,7 +105,7 @@ test('flow step with service endpoint optional', async t => {
           endpoints: {
             optional: {
               in: true,
-              target: 'aService:a1',
+              target: 'service(aService).a1',
               mandatory: false
             }
           }
@@ -123,19 +123,22 @@ test('flow step with service endpoint optional', async t => {
   t.is(e.isConnected, false);
 });
 
-test('flow step with service endpoint mandatory', async t => {
+test.only('flow step with service endpoint mandatory', async t => {
   const f = new Flow(
     {
       name: 'myFlow',
       type: 'kronos-flow',
       autostart: true,
+      endpoints: {
+        e1: 'with-service.mandatory'
+      },
       steps: {
         'with-service': {
           type: 'slow-start',
           endpoints: {
             mandatory: {
               out: true,
-              target: 'config:config'
+              target: 'service(config).config'
             }
           }
         }
