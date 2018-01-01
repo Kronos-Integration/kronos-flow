@@ -35,8 +35,6 @@ export class Flow extends Step {
           type: 'object',
           needsRestart: true,
           setter(steps) {
-            console.log(`setSteps: ${this.name} ${Object.keys(steps)}`);
-
             Object.defineProperty(this, 'steps', { value: new Map() });
 
             for (const subStepName in steps) {
@@ -114,16 +112,35 @@ export class Flow extends Step {
   }
 
   endpointForExpression(expression, wait) {
-    console.log(`endpointForExpression: ${expression}`);
+    //console.log(`endpointForExpression: ${expression}`);
 
     const [sn, en] = expression.split(/\./);
-    const step = this.steps.get(sn);
 
-    if (step !== undefined) {
-      console.log(
-        `endpintFor ${step.name} ${en} -> ${step.endpointForExpression(en)}`
-      );
-      return step.endpointForExpression(en, wait);
+    if (sn !== undefined) {
+      const m = sn.match(/service\((\w+)\)/);
+
+      if (m) {
+        const serviceName = m[1];
+
+        const service = this.owner.services[serviceName];
+
+        if (service === undefined) {
+          throw new Error(`Service '${serviceName}' not found in ${this}`);
+        }
+
+        return service.endpointForExpression(en, wait);
+      }
+
+      const step = this.steps.get(sn);
+
+      if (step === undefined) {
+        throw new Error(`Step '${sn}' not found in ${this}`);
+      } else {
+        /*console.log(
+          `endpointFor ${step.name} ${en} -> ${step.endpointForExpression(en)}`
+        );*/
+        return step.endpointForExpression(en, wait);
+      }
     }
 
     return super.endpointForExpression(expression, wait);
@@ -155,15 +172,13 @@ export class Flow extends Step {
     return r;
   }
 
-  /****/
-
   /**
    * Find endpoint for given expression
    * @param {string} expression
    * @param {boolean} wait for endpoint to become present (deliver a promise)
    * @param {string} problems
    * @return {Endpoint} found endpoint
-   */
+   *
   endpointFor(expression, wait, problems) {
     const res = expression.match(/^(.+):(.+)/); // service:endpoint
 
@@ -191,151 +206,11 @@ export class Flow extends Step {
 
         problems.push(`Service '${res[1]}' not found`);
       }
-    } else {
-      const res = expression.match(/^(.+)\/(.+)/);
-      if (res) {
-        // step/endpoint
-        const step = this.steps.get(res[1]);
-        if (step) {
-          const target = step.endpoints[res[2]];
-          if (target) {
-            return target;
-          }
-          problems.push(`Endpoint '${res[2]}' of step '${res[1]}' not found`);
-        } else {
-          problems.push(`Step '${res[1]}' not found`);
-        }
-      }
     }
 
     return undefined;
   }
-
-  /**
-   * set the target endpoints
-   */
-  connectEndpoints(stepDefinition) {
-    for (const subStepName in stepDefinition.steps) {
-      const subStepDefinition = stepDefinition.steps[subStepName];
-
-      if (subStepDefinition.endpoints) {
-        const step = this.steps.get(subStepName);
-
-        for (const endpointName in subStepDefinition.endpoints) {
-          const endpointConfig = subStepDefinition.endpoints[endpointName];
-          const target =
-            typeof endpointConfig === 'string'
-              ? endpointConfig
-              : endpointConfig.target;
-
-          if (typeof target === 'string') {
-            const mandatory =
-              endpointConfig === 'string'
-                ? true
-                : endpointConfig.mandatory === undefined
-                  ? true
-                  : endpointConfig.mandatory;
-
-            const problems = [];
-            const targetEndpoint = this.endpointFor(
-              target,
-              mandatory,
-              problems
-            );
-
-            if (targetEndpoint) {
-              const endpoint = step.endpoints[endpointName];
-              if (targetEndpoint.name) {
-                // plain endpoint - no promise
-                endpoint.connected = targetEndpoint;
-              } else {
-                this.outstandingConnections.push(
-                  targetEndpoint.then(te => {
-                    this.info(level => `connect: ${endpoint} <> ${te}`);
-                    endpoint.connected = te;
-                  })
-                );
-              }
-            } else {
-              if (step.type === 'kronos-flow') {
-                // The target is a step of the flow itself. This has been handled
-                // before as the flow was created. ???
-              } else {
-                if (mandatory) {
-                  throw new Error(
-                    `While evaluating '${target}' ${problems.join(',')}`
-                  );
-                }
-                this.info(
-                  level =>
-                    `Remove optional endpoint '${endpointName}' since it can't be connected: ${problems.join(
-                      ','
-                    )}`
-                );
-                step.removeEndpoint(endpointName);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * A flow has only endpoint proxies. These will be replaced by the original endpoints
-   * of the sub steps
-   * get the original endpoints for the Flow.
-   */
-  connectRootEndpoints() {
-    const endpoints = this.endpoints;
-    const name = this.name;
-    const steps = this.steps;
-
-    for (const endpointName in endpoints) {
-      const endpoint = endpoints[endpointName];
-
-      if (typeof endpoint === 'string') {
-        const res = endpoint.match(/^(.+)\/(.+)/);
-        if (res) {
-          // optional step:
-          const targetStepName = res[1];
-          const targetEndpointName = res[2];
-          let targetStep = steps.get(targetStepName);
-
-          if (!targetStep) {
-            // test if the step refernces this current flow.
-            if (targetStepName === name) {
-              targetStep = this;
-            }
-          }
-
-          if (targetStep) {
-            const targetEndpoint = targetStep.endpoints[targetEndpointName];
-            if (targetEndpoint) {
-              endpoints[endpointName] = targetEndpoint;
-              targetEndpoint.step = targetStep;
-            } else {
-              throw new Error(
-                `Target endpoint '${targetEndpointName}' not found in step '${targetStepName}'`
-              );
-            }
-          } else {
-            throw new Error(`Target step '${targetStepName}' not found`);
-          }
-        } else {
-          throw new Error(
-            `Endpoint target '${endpoint}' of endpoint '${endpointName}' is not of right format`
-          );
-        }
-      } else {
-        if (!endpoint.default) {
-          throw new Error(
-            `Flow endpoint '${endpointName}' in flow '${name}' is not of type 'string'`
-          );
-        }
-      }
-    }
-  }
+*/
 }
 
 export function registerWithManager(manager) {

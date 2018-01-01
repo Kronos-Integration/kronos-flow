@@ -1,5 +1,5 @@
 import { Step } from 'kronos-step';
-
+import { ServiceProviderMixin, Service } from 'kronos-service';
 import { FlowProviderMixin } from '../src/flow-provider-mixin';
 import { registerWithManager } from '../src/flow';
 
@@ -20,9 +20,7 @@ const fs = require('fs'),
  */
 
 export class FlowProvider extends FlowProviderMixin(
-  class Base {
-    emit() {}
-  }
+  ServiceProviderMixin(Service)
 ) {}
 
 export class MyStep extends Step {

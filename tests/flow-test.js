@@ -93,12 +93,45 @@ test('flow autostart true', async t => {
   t.is(f.autostart, true);
 });
 
+test('flow with wrong endpoint step alias', t => {
+  try {
+    const f = new Flow(
+      {
+        name: 'myFlow',
+        type: 'kronos-flow',
+        endpoints: {
+          e1: 's1.x1'
+        }
+      },
+      owner
+    );
+  } catch (e) {
+    t.is(e.message, "Step 's1' not found in myFlow: stopped");
+  }
+});
+
+test('flow with wrong endpoint service alias', t => {
+  try {
+    const f = new Flow(
+      {
+        name: 'myFlow',
+        type: 'kronos-flow',
+        endpoints: {
+          e1: 'service(s1).x1'
+        }
+      },
+      owner
+    );
+  } catch (e) {
+    t.is(e.message, "Service 's1' not found in myFlow: stopped");
+  }
+});
+
 test('flow step with service endpoint optional', async t => {
   const f = new Flow(
     {
       name: 'myFlow',
       type: 'kronos-flow',
-      autostart: true,
       steps: {
         'with-service': {
           type: 'slow-start',
@@ -128,7 +161,6 @@ test.only('flow step with service endpoint mandatory', async t => {
     {
       name: 'myFlow',
       type: 'kronos-flow',
-      autostart: true,
       endpoints: {
         e1: 'with-service.mandatory'
       },
