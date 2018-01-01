@@ -3,8 +3,8 @@
   "name": "flow-one-step",
   "description": "a simple flow for testing",
   "endpoints": {
-    "inFile": "Gumbo_in/in",
-    "outFile": "Gumbo_in/out"
+    "inFile": "Gumbo_in.in",
+    "outFile": "Gumbo_in.out"
   },
   "steps": {
     "Gumbo_in": {
