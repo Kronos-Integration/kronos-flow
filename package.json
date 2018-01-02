@@ -30,7 +30,7 @@
     "lint": "documentation lint src/flow.js"
   },
   "dependencies": {
-    "kronos-endpoint": "^2.14.11",
+    "kronos-endpoint": "^2.14.15",
     "kronos-step": "^5.6.5"
   },
   "devDependencies": {
