@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "kronos-endpoint": "^2.14.15",
-    "kronos-step": "^5.6.5"
+    "kronos-step": "^5.6.6"
   },
   "devDependencies": {
     "ava": "^0.24.0",
