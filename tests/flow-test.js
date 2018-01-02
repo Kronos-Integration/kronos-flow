@@ -110,7 +110,25 @@ test('flow with wrong endpoint step alias', t => {
   }
 });
 
-test('flow with wrong endpoint service alias', t => {
+test('flow with endpoint service alias', t => {
+  const f = new Flow(
+    {
+      name: 'myFlow',
+      type: 'kronos-flow',
+      endpoints: {
+        e: 'service(config).log'
+      }
+    },
+    owner
+  );
+
+  //console.log(JSON.stringify(f));
+
+  const e = f.endpoints.e;
+  t.is(e.name, 'e');
+});
+
+test('flow with endpoint service alias error', t => {
   try {
     const f = new Flow(
       {
@@ -123,7 +141,10 @@ test('flow with wrong endpoint service alias', t => {
       owner
     );
   } catch (e) {
-    t.is(e.message, "Service 's1' not found in myFlow: stopped");
+    t.is(
+      e.message,
+      "Service 's1' not found in FlowProvider: stopped (logger,config,FlowProvider)"
+    );
   }
 });
 
@@ -156,7 +177,7 @@ test('flow step with service endpoint optional', async t => {
   t.is(e.isConnected, false);
 });
 
-test.only('flow step with service endpoint mandatory', async t => {
+test('flow step with service endpoint mandatory', async t => {
   const f = new Flow(
     {
       name: 'myFlow',
@@ -169,8 +190,7 @@ test.only('flow step with service endpoint mandatory', async t => {
           type: 'slow-start',
           endpoints: {
             mandatory: {
-              out: true,
-              target: 'service(config).config'
+              target: 'service(config).command'
             }
           }
         }

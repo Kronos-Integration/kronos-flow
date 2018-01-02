@@ -112,34 +112,20 @@ export class Flow extends Step {
   }
 
   endpointForExpression(expression, wait) {
-    //console.log(`endpointForExpression: ${expression}`);
+    const m = expression.match(/^([\w\-_]+)\.(.*)/);
 
-    const [sn, en] = expression.split(/\./);
+    if (m) {
+      console.log(`endpointForExpression: ${expression} ${m}`);
 
-    if (sn !== undefined) {
-      const m = sn.match(/service\((\w+)\)/);
+      const stepName = m[1];
+      const suffixExpression = m[2];
 
-      if (m) {
-        const serviceName = m[1];
-
-        const service = this.owner.services[serviceName];
-
-        if (service === undefined) {
-          throw new Error(`Service '${serviceName}' not found in ${this}`);
-        }
-
-        return service.endpointForExpression(en, wait);
-      }
-
-      const step = this.steps.get(sn);
+      const step = this.steps.get(stepName);
 
       if (step === undefined) {
-        throw new Error(`Step '${sn}' not found in ${this}`);
+        throw new Error(`Step '${stepName}' not found in ${this}`);
       } else {
-        /*console.log(
-          `endpointFor ${step.name} ${en} -> ${step.endpointForExpression(en)}`
-        );*/
-        return step.endpointForExpression(en, wait);
+        return step.endpointForExpression(suffixExpression, wait);
       }
     }
 
