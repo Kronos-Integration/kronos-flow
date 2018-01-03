@@ -73,3 +73,11 @@ export async function flowTest(t, flowFileName) {
 
   return flow;
 }
+
+export async function flowProvider() {
+  const fp = new FlowProvider();
+  await fp.start();
+  fp.registerStep(MyStep);
+
+  return fp;
+}

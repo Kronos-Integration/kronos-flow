@@ -3,7 +3,7 @@ import test from 'ava';
 import { Flow } from '../src/flow';
 import { FlowProviderMixin } from '../src/flow-provider-mixin';
 import { Step } from 'kronos-step';
-import { FlowProvider, MyStep } from './util';
+import { flowProvider, FlowProvider, MyStep } from './util';
 
 const owner = new FlowProvider();
 
@@ -39,9 +39,7 @@ test('flow json', t => {
   const flow = makeFlow(owner);
   const json = flow.toJSONWithOptions();
   t.deepEqual(json, {
-    //name: 'myFlow1',
     type: 'kronos-flow',
-    //description: 'my out-step description',
     endpoints: {},
 
     steps: {
@@ -58,13 +56,7 @@ test('flow autostart false', async t => {
   const f = new Flow(
     {
       name: 'myFlow',
-      type: 'kronos-flow',
-      steps: {
-        slowInbound: {
-          type: 'slow-start',
-          time: 10
-        }
-      }
+      type: 'kronos-flow'
     },
     owner
   );
@@ -78,13 +70,7 @@ test('flow autostart true', async t => {
     {
       name: 'myFlow',
       type: 'kronos-flow',
-      autostart: true,
-      steps: {
-        slowInbound: {
-          type: 'slow-start',
-          time: 10
-        }
-      }
+      autostart: true
     },
     owner
   );
@@ -106,11 +92,12 @@ test('flow with wrong endpoint step alias', t => {
       owner
     );
   } catch (e) {
-    t.is(e.message, "Step 's1' not found in myFlow: stopped");
+    t.is(e.message, "Step 's1' not found in myFlow");
   }
 });
 
-test('flow with endpoint service alias', t => {
+test('flow with endpoint service alias', async t => {
+  const o = await flowProvider();
   const f = new Flow(
     {
       name: 'myFlow',
@@ -119,7 +106,7 @@ test('flow with endpoint service alias', t => {
         e: 'service(config).log'
       }
     },
-    owner
+    o
   );
 
   //console.log(JSON.stringify(f));
@@ -128,8 +115,10 @@ test('flow with endpoint service alias', t => {
   t.is(e.name, 'e');
 });
 
-test('flow with endpoint service alias error', t => {
+test('flow with endpoint service alias error', async t => {
   try {
+    const o = await flowProvider();
+
     const f = new Flow(
       {
         name: 'myFlow',
@@ -138,17 +127,19 @@ test('flow with endpoint service alias error', t => {
           e1: 'service(s1).x1'
         }
       },
-      owner
+      o
     );
   } catch (e) {
     t.is(
       e.message,
-      "Service 's1' not found in FlowProvider: stopped (logger,config,FlowProvider)"
+      "Service 's1' not found in FlowProvider (logger,config,FlowProvider)"
     );
   }
 });
 
-test('flow step with service endpoint optional', async t => {
+test.only('flow step with service endpoint optional', async t => {
+  const o = await flowProvider();
+
   const f = new Flow(
     {
       name: 'myFlow',
@@ -166,7 +157,7 @@ test('flow step with service endpoint optional', async t => {
         }
       }
     },
-    owner
+    o
   );
 
   const e = f.steps.get('with-service').endpoints.optional;
@@ -178,6 +169,8 @@ test('flow step with service endpoint optional', async t => {
 });
 
 test('flow step with service endpoint mandatory', async t => {
+  const o = await flowProvider();
+
   const f = new Flow(
     {
       name: 'myFlow',
@@ -196,7 +189,7 @@ test('flow step with service endpoint mandatory', async t => {
         }
       }
     },
-    owner
+    o
   );
 
   const e = f.steps.get('with-service').endpoints.mandatory;

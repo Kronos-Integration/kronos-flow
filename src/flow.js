@@ -123,7 +123,7 @@ export class Flow extends Step {
       const step = this.steps.get(stepName);
 
       if (step === undefined) {
-        throw new Error(`Step '${stepName}' not found in ${this}`);
+        throw new Error(`Step '${stepName}' not found in ${this.name}`);
       } else {
         return step.endpointForExpression(suffixExpression, wait);
       }
