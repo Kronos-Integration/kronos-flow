@@ -27,7 +27,8 @@
     "posttest": "npm run prepare && markdown-doctest",
     "prepare": "rollup -c",
     "docs": "documentation readme src/flow.js --section=API",
-    "lint": "documentation lint src/flow.js"
+    "lint": "documentation lint src/flow.js",
+    "travis-deploy-once": "travis-deploy-once"
   },
   "dependencies": {
     "kronos-endpoint": "^2.14.15",
@@ -41,8 +42,9 @@
     "nyc": "^11.4.1",
     "rollup": "^0.54.0",
     "rollup-plugin-multi-entry": "^2.0.2",
-    "semantic-release": "^11.1.0",
-    "documentation": "^5.3.5"
+    "semantic-release": "^12.2.0",
+    "documentation": "^5.3.5",
+    "travis-deploy-once": "^4.3.1"
   },
   "engines": {
     "node": ">=8.9.4"
