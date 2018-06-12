@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
-    "kronos-step-passthrough": "^2.1.1",
+    "kronos-step-passthrough": "^2.2.0",
     "kronos-test-step": "^3.1.4",
     "markdown-doctest": "^0.9.1",
     "nyc": "^12.0.1",
