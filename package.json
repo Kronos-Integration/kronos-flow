@@ -65,7 +65,8 @@
   "homepage": "https://github.com/Kronos-Integration/kronos-flow#readme",
   "ava": {
     "files": [
-      "tests/*-test.js"
+      "tests/*-test.js",
+      "tests/*-test.mjs"
     ],
     "presets": [
       "env"
