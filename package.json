@@ -36,7 +36,7 @@
     "kronos-step": "^5.7.0"
   },
   "devDependencies": {
-    "ava": "^1.0.0-rc.2",
+    "ava": "^1.0.1",
     "kronos-step-passthrough": "^2.2.0",
     "kronos-test-step": "^3.1.4",
     "markdown-doctest": "^0.9.1",
