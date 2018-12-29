@@ -24,12 +24,10 @@
   "scripts": {
     "cover": "c8 --temp-directory build/coverage ava && c8 report -r lcov --temp-directory build/coverage",
     "test": "ava",
-    "semantic-release": "semantic-release",
     "posttest": "npm run prepare && markdown-doctest",
     "prepare": "rollup -c",
     "docs": "documentation readme src/flow.js --section=API",
-    "lint": "documentation lint src/flow.js",
-    "travis-deploy-once": "travis-deploy-once"
+    "lint": "documentation lint src/flow.js"
   },
   "dependencies": {
     "kronos-endpoint": "^2.15.0",
@@ -43,7 +41,6 @@
     "rollup": "^1.0.0",
     "semantic-release": "^15.13.2",
     "documentation": "^9.1.1",
-    "travis-deploy-once": "^5.0.11",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-executable": "^1.3.0",
