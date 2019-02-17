@@ -41,7 +41,7 @@
     "kronos-step-passthrough": "^2.2.0",
     "kronos-test-step": "^3.1.4",
     "markdown-doctest": "^0.9.1",
-    "rollup": "^1.1.2",
+    "rollup": "^1.2.0",
     "rollup-plugin-cleanup": "^3.1.1",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-executable": "^1.4.4",
