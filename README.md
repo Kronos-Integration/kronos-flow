@@ -10,7 +10,6 @@
 [![Dependency Status](https://david-dm.org/Kronos-Integration/kronos-flow.svg)](https://david-dm.org/Kronos-Integration/kronos-flow)
 [![devDependency Status](https://david-dm.org/Kronos-Integration/kronos-flow/dev-status.svg)](https://david-dm.org/Kronos-Integration/kronos-flow#info=devDependencies)
 [![docs](http://inch-ci.org/github/Kronos-Integration/kronos-flow.svg?branch=master)](http://inch-ci.org/github/Kronos-Integration/kronos-flow)
-[![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![downloads](http://img.shields.io/npm/dm/kronos-flow.svg?style=flat-square)](https://npmjs.org/package/kronos-flow)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
