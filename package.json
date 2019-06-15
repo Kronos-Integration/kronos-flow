@@ -34,24 +34,24 @@
     "kronos-step": "^5.7.0"
   },
   "devDependencies": {
-    "ava": "^1.4.1",
+    "ava": "^2.1.0",
     "builtin-modules": "^3.1.0",
     "c8": "^5.0.1",
-    "documentation": "^11.0.0",
+    "documentation": "^11.0.1",
     "esm": "^3.2.25",
     "kronos-step-passthrough": "^2.2.0",
     "kronos-test-step": "^3.1.4",
     "markdown-doctest": "^0.9.1",
-    "rollup": "^1.12.3",
+    "rollup": "^1.15.5",
     "rollup-plugin-cleanup": "^3.1.1",
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-executable": "^1.4.5",
     "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^5.0.0",
-    "semantic-release": "^15.13.14"
+    "rollup-plugin-node-resolve": "^5.0.2",
+    "semantic-release": "^15.13.16"
   },
   "engines": {
-    "node": ">=10.15.3"
+    "node": ">=10.16.0"
   },
   "repository": {
     "type": "git",
@@ -63,7 +63,6 @@
   "homepage": "https://github.com/Kronos-Integration/kronos-flow#readme",
   "ava": {
     "files": [
-      "tests/*-test.js",
       "tests/*-test.mjs"
     ],
     "require": [
@@ -72,7 +71,6 @@
     "babel": false,
     "compileEnhancements": false,
     "extensions": [
-      "js",
       "mjs"
     ]
   },
