@@ -1,7 +1,4 @@
 language: node_js
-node_js:
-  - 12.10.0
-cache: npm
 jobs:
   include:
     - stage: test
@@ -10,6 +7,8 @@ jobs:
         - npm run cover
         - npx codecov
         - cat ./build/coverage/lcov.info | npx coveralls
+      node_js:
+        - 12.11.1
     - stage: doc
       node_js: lts/*
       skip_cleanup: 'true'
@@ -30,7 +29,3 @@ branches:
     - /^greenkeeper/.*$/
     - /^mkpr/.*$/
     - /^npm-template-sync/.*$/
-script:
-  - npm run cover
-  - npx codecov
-  - cat ./build/coverage/lcov.info | npx coveralls
