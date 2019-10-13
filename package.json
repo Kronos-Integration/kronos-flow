@@ -41,7 +41,7 @@
     "esm": "^3.2.25",
     "kronos-step-passthrough": "^2.2.0",
     "kronos-test-step": "^3.1.4",
-    "markdown-doctest": "^0.9.1",
+    "markdown-doctest": "^1.0.0",
     "rollup": "^1.23.1",
     "rollup-plugin-cleanup": "^3.1.1",
     "rollup-plugin-commonjs": "^10.1.0",
