@@ -8,7 +8,7 @@ jobs:
         - npx codecov
         - cat ./build/coverage/lcov.info | npx coveralls
       node_js:
-        - 12.12.0
+        - 12.13.0
     - stage: doc
       node_js: lts/*
       skip_cleanup: 'true'
